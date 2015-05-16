@@ -36,6 +36,8 @@ public class MainActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getActionBar().setTitle("EU Goal News");
+
         final EditText searchBox = (EditText) findViewById(R.id.search_box);
         Button mSearchButton = (Button) findViewById(R.id.search_button);
         mSearchButton.setOnClickListener(new View.OnClickListener() {
