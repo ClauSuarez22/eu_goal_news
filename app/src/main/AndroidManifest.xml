@@ -20,6 +20,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".LeagueDetail"
+            android:label="@string/title_activity_league_detail"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".LeagueDetailAdapter"
+            android:label="@string/title_activity_league_detail_adapter" >
+        </activity>
     </application>
 
 </manifest>

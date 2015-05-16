@@ -59,23 +59,29 @@ public class MainActivity extends ListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_init, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            // action with ID action_settings was selected
+            case R.id.action_league_detail:
+                // Esperar que Julio termine el combobox para obtener la liga seleccionada
+                // En caso que la liga seleccionada sea todas deshabilitar el boton
+                String leagueName = "Liga BBVA";
+                Integer leagueId = 368;
+                Intent intent = new Intent(this, uy.edu.ucu.eu_goal_news.LeagueDetail.class);
+                intent.putExtra("leagueName", leagueName);
+                intent.putExtra("leagueId", leagueId);
+                startActivity(intent);
+                break;
+            default:
+                break;
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     /*
