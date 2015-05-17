@@ -46,7 +46,7 @@ public class MatchesListAdapter extends ArrayAdapter<Match>  {
 
         // Get and Format DateTime of the Match
         Date matchDate = this.mMatches.get(position).getDate();
-        DateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat formatDate = new SimpleDateFormat("dd/MM/yy");
         dateTextView.setText(formatDate.format(matchDate));
         DateFormat formatTime = new SimpleDateFormat("HH:mm");
         timeTextView.setText(formatTime.format(matchDate));

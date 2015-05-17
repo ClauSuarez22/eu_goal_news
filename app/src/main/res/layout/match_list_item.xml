@@ -11,13 +11,15 @@
         android:layout_height="wrap_content"
         android:text="Liga BBVA"
         android:textStyle="bold"
-        android:visibility="gone"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_margin="20dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -31,9 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
                 android:textSize="@dimen/dateTextSize"
-                android:layout_marginLeft="10sp"
-                android:text="01/01/01"
-                android:textStyle="bold"/>
+                android:text="01/01/01"/>
 
             <TextView
                 android:id="@+id/time_match"
@@ -41,9 +41,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/timeTextSize"
                 android:layout_marginTop="5sp"
-                android:layout_marginLeft="10sp"
-                android:text="00:00 AM"
-                android:textStyle="bold"/>
+                android:text="00:00 AM"/>
         </LinearLayout>
 
         <LinearLayout
@@ -58,9 +56,7 @@
                 android:textSize="14sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5sp"
-                android:text="RDC Espanyol"
-                android:textStyle="bold"/>
+                android:text="RDC Espanyol"/>
 
             <TextView
                 android:id="@+id/away_team"
@@ -68,9 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
-                android:layout_marginBottom="5sp"
-                android:text="FC Barcelona"
-                android:textStyle="bold"/>
+                android:text="FC Barcelona"/>
 
         </LinearLayout>
 

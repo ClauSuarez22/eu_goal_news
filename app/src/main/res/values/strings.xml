@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EU_goal_news</string>
+    <string name="app_name">EU Goal News</string>
     <string name="loading">Cargando...</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

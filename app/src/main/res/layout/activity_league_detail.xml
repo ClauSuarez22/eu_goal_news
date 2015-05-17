@@ -3,60 +3,63 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LeagueDetail">
+    tools:context=".LeagueDetail"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_margin="20dp">
 
         <TextView
             android:id="@+id/emptyLabel"
-            android:layout_width="25dp"
+            android:layout_width="35dp"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_weight="5"
-            android:textStyle="bold"/>
+            style="@style/letterStyle"
+            android:layout_weight="5"/>
 
         <TextView
             android:id="@+id/playedGamesLabel"
             android:layout_width="5dp"
             android:layout_height="wrap_content"
             android:text="PG"
-            android:layout_weight="1"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/pointsLabel"
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"
-            android:text="P"
-            android:layout_weight="1"
-            android:textStyle="bold"/>
+            style="@style/letterStyle"
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/goalsLabel"
             android:layout_width="5dp"
             android:layout_height="wrap_content"
             android:text="G"
-            android:layout_weight="1"
-            android:textStyle="bold"/>
+            style="@style/letterStyle"
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/goalsAgainstLabel"
             android:layout_width="5dp"
             android:layout_height="wrap_content"
             android:text="GA"
-            android:layout_weight="1"
-            android:textStyle="bold"/>
+            style="@style/letterStyle"
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/goalDifferenceLabel"
             android:layout_width="5dp"
             android:layout_height="wrap_content"
-            android:text="GD"
+            android:text="DIF"
+            style="@style/letterStyle"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/pointsLabel"
+            android:layout_width="5dp"
+            android:layout_height="wrap_content"
+            android:text="PTS"
             android:layout_weight="1"
+            style="@style/letterStyle"
             android:textStyle="bold"/>
 
     </LinearLayout>
@@ -65,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@android:color/black"
-        android:dividerHeight="2dp"
+        android:dividerHeight="1dp"
         android:id="@android:id/list" />
 
 

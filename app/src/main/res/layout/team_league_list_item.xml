@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_margin="20dp">
 
         <TextView
             android:id="@+id/position"
@@ -16,6 +17,7 @@
             android:layout_height="match_parent"
             android:text="algo"
             android:layout_weight="1"
+            style="@style/letterStyle"
             android:textStyle="bold"/>
 
         <TextView
@@ -23,46 +25,48 @@
             android:layout_width="20dp"
             android:layout_height="match_parent"
             android:text="algo"
-            android:layout_weight="4"
-            android:textStyle="bold"/>
+            style="@style/letterStyle"
+            android:layout_marginRight="10dp"
+            android:layout_weight="4"/>
 
         <TextView
             android:id="@+id/playedGames"
             android:layout_width="5dp"
             android:layout_height="match_parent"
             android:text="algo"
-            android:layout_weight="1"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/points"
-            android:layout_width="5dp"
-            android:layout_height="match_parent"
-            android:text="algo"
-            android:layout_weight="1"
-            android:textStyle="bold"/>
+            style="@style/letterStyle"
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/goals"
             android:layout_width="5dp"
             android:layout_height="match_parent"
             android:text="algo"
-            android:layout_weight="1"
-            android:textStyle="bold"/>
+            style="@style/letterStyle"
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/goalsAgainst"
             android:layout_width="5dp"
             android:layout_height="match_parent"
             android:text="algo"
-            android:layout_weight="1"
-            android:textStyle="bold"/>
+            style="@style/letterStyle"
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/goalDifference"
             android:layout_width="5dp"
             android:layout_height="match_parent"
             android:text="algo"
+            style="@style/letterStyle"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/points"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:text="algo"
+            style="@style/letterStyle"
             android:layout_weight="1"
             android:textStyle="bold"/>
 
