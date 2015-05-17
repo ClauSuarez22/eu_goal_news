@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
-                android:textSize="18sp"
+                android:textSize="@dimen/dateTextSize"
                 android:layout_marginLeft="10sp"
                 android:text="01/01/01"
                 android:textStyle="bold"/>
@@ -39,7 +39,7 @@
                 android:id="@+id/time_match"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="@dimen/timeTextSize"
                 android:layout_marginTop="5sp"
                 android:layout_marginLeft="10sp"
                 android:text="00:00 AM"
@@ -55,7 +55,7 @@
 
             <TextView
                 android:id="@+id/home_team"
-                android:textSize="20sp"
+                android:textSize="14sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
@@ -64,7 +64,7 @@
 
             <TextView
                 android:id="@+id/away_team"
-                android:textSize="20sp"
+                android:textSize="@dimen/teamTextSize"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
