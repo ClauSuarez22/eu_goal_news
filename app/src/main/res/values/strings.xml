@@ -6,4 +6,5 @@
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="title_activity_league_detail">LeagueDetail</string>
     <string name="title_activity_league_detail_adapter">LeagueDetailAdapter</string>
+    <string name="vs_string">vs</string>
 </resources>
