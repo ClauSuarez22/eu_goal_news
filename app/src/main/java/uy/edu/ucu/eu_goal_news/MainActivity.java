@@ -39,6 +39,9 @@ public class MainActivity extends ListActivity{
     private Spinner mSpinner;
     private String[] mLeagues;
     private HashMap<String,Soccerseason> mLeaguesHash;
+    private String selectedLeague;
+    private String selectedLeagueTableUrl;
+    private Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class MainActivity extends ListActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        mMenu = menu;
         return true;
     }
 
@@ -65,16 +69,9 @@ public class MainActivity extends ListActivity{
         switch (item.getItemId()) {
             // action with ID action_settings was selected
             case R.id.action_league_detail:
-                // Esperar que Julio termine el combobox para obtener la liga seleccionada
-                // En caso que la liga seleccionada sea todas deshabilitar el boton
-                // Claudia usa mLeaguesHash para obtener la url de la liga, este dic esta
-                // cargado con todas las ligas del Combo.
-                //  mLeaguesHash.get(captionDeLaLiga);
-                String leagueName = "Liga BBVA";
-                Integer leagueId = 368;
                 Intent intent = new Intent(this, uy.edu.ucu.eu_goal_news.LeagueDetail.class);
-                intent.putExtra("leagueName", leagueName);
-                intent.putExtra("leagueId", leagueId);
+                intent.putExtra("selectedLeagueUrl", selectedLeagueTableUrl);
+                intent.putExtra("leagueName", selectedLeague);
                 startActivity(intent);
                 break;
             default:
@@ -245,6 +242,18 @@ public class MainActivity extends ListActivity{
                 mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                        if ( mLeagues[position].compareTo( "All leagues" ) != 0 )
+                        {
+                            selectedLeagueTableUrl = mLeaguesHash.get(mLeagues[position]).getLeagueTable();
+                            mMenu.findItem(R.id.action_league_detail).setEnabled(true);
+                        }
+                        else
+                        {
+                            mMenu.findItem(R.id.action_league_detail).setEnabled(false);
+                        }
+
+                        selectedLeague = mLeagues[position];
+
                         new GetMatchesAsyncTask(MainActivity.this)
                                 .execute(mLeagues[position]);
                     }

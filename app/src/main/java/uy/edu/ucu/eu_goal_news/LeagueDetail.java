@@ -41,12 +41,12 @@ public class LeagueDetail extends ListActivity {
         if ( extras != null )
         {
             String leagueName = extras.getString( "leagueName" );
-            Integer leagueId = extras.getInt("leagueId");
+            String selectedLeagueUrl = extras.getString("selectedLeagueUrl");
 
             getActionBar().setTitle( leagueName );
 
             new GetLeagueAsyncTask( LeagueDetail.this )
-                    .execute( leagueId.toString() );
+                    .execute( selectedLeagueUrl );
         }
 
         ActionBar actionBar = getActionBar();
@@ -74,7 +74,6 @@ public class LeagueDetail extends ListActivity {
     // Async Task for Team Leagues
     private class GetLeagueAsyncTask extends AsyncTask<String, Integer, ArrayList<TeamLeague>> {
 
-        private final String mGetLeagueDetailApiUrl = "http://api.football-data.org/alpha/soccerseasons/%s/leagueTable";
         private Context mContext;
         private ProgressDialog mProgressDialog;
 
@@ -91,14 +90,11 @@ public class LeagueDetail extends ListActivity {
         @Override
         protected ArrayList<TeamLeague> doInBackground(String... params) {
 
-            // Parametro para filtrar por liga
-            String leagueId = params[0];
-
             HttpURLConnection connection = null;
 
 
             try {
-                URL url = new URL(String.format(mGetLeagueDetailApiUrl, leagueId));
+                URL url = new URL(params[0]);
 
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("X-Auth-Token","7641996b673943d0a712f2f4493c7bbd");
