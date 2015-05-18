@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:text="Liga BBVA"
         android:textStyle="bold"
+        style="@style/letterStyle"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"/>
 
@@ -32,6 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
+                style="@style/letterStyle"
                 android:textSize="@dimen/dateTextSize"
                 android:text="01/01/01"/>
 
@@ -40,6 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/timeTextSize"
+                style="@style/letterStyle"
                 android:layout_marginTop="5sp"
                 android:text="00:00 AM"/>
         </LinearLayout>
@@ -56,6 +59,7 @@
                 android:textSize="14sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/letterStyle"
                 android:text="RDC Espanyol"/>
 
             <TextView
@@ -64,6 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
+                style="@style/letterStyle"
                 android:text="FC Barcelona"/>
 
         </LinearLayout>
