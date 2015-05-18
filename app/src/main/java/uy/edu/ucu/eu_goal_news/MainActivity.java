@@ -26,6 +26,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -139,7 +141,16 @@ public class MainActivity extends ListActivity{
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject item = jsonArray.getJSONObject(i);
                     matchList.add(new Match(item));
+
                 }
+
+                // Sort by MatchLeagueId
+                Collections.sort(matchList, new Comparator<Match>() {
+                    public int compare(Match m1, Match m2) {
+                        return m1.getMatchLeagueId().compareTo(m2.getMatchLeagueId());
+                    }
+                });
+
                 return matchList;
 
             } catch (IOException | JSONException e) {
@@ -155,7 +166,7 @@ public class MainActivity extends ListActivity{
 
             // initialize adapter with matches
             if(matches != null) {
-                setListAdapter(new MatchesListAdapter(mContext,R.layout.match_list_item, matches));
+                setListAdapter(new MatchesListAdapter(mContext, R.layout.match_list_item, matches, mLeaguesHash));
             }else{
                 Toast.makeText(mContext, "Error downloading matches", Toast.LENGTH_SHORT).show();
             }
@@ -209,6 +220,14 @@ public class MainActivity extends ListActivity{
                     JSONObject item = jsonArray.getJSONObject(i);
                     seasonList.add(new Soccerseason(item));
                 }
+
+                // Sort by LeagueId
+                Collections.sort(seasonList, new Comparator<Soccerseason>() {
+                    public int compare(Soccerseason s1, Soccerseason s2) {
+                        return s1.getLeagueId().compareTo(s1.getLeagueId());
+                    }
+                });
+
                 return seasonList;
 
             } catch (IOException | JSONException e) {
@@ -260,7 +279,7 @@ public class MainActivity extends ListActivity{
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parentView) {
-                        //
+                        // Nop
                     }
                 });
             }else{
@@ -271,6 +290,4 @@ public class MainActivity extends ListActivity{
         }
 
     }
-
-
 }

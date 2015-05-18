@@ -30,6 +30,9 @@ public class Match {
     private String homeTeamUrl;
     private String awayTeamUrl;
 
+    private Integer matchLeagueId;
+    private Boolean showLeagueName;
+
     public Match(JSONObject object) throws JSONException {
         this.status = object.getString("status");
         this.matchday = object.getInt("matchday");
@@ -53,6 +56,21 @@ public class Match {
             e.printStackTrace();
         }
 
+        int index = soccerseasonUrl.lastIndexOf("/");
+        this.matchLeagueId = Integer.parseInt(soccerseasonUrl.substring(index+1));
+        this.showLeagueName = false;
+    }
+
+    public Boolean getShowLeagueName() {
+        return showLeagueName;
+    }
+
+    public void setShowLeagueName(Boolean showLeagueName) {
+        this.showLeagueName = showLeagueName;
+    }
+
+    public Integer getMatchLeagueId() {
+        return matchLeagueId;
     }
 
     public Date getDate() {

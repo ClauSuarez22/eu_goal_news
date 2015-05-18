@@ -2,8 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_match_item">
 
+    <View
+        android:id="@+id/horizontal_separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:visibility="gone"
+        android:background="@android:color/darker_gray"/>
 
     <TextView
         android:id="@+id/league_name"
@@ -11,6 +18,7 @@
         android:layout_height="wrap_content"
         android:text="Liga BBVA"
         android:textStyle="bold"
+        android:visibility="gone"
         style="@style/letterStyle"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"/>
