@@ -22,6 +22,8 @@ public class Soccerseason {
     private String fixtures;
     private String leagueTable;
 
+    private Integer leagueId;
+
     public Soccerseason(){
         this.caption = null;
     }
@@ -40,6 +42,13 @@ public class Soccerseason {
         this.fixtures = links.getJSONObject("fixtures").getString("href");
         this.leagueTable = links.getJSONObject("leagueTable").getString("href");
 
+        int index = self.lastIndexOf("/");
+        this.leagueId = Integer.parseInt(self.substring(index+1));
+
+    }
+
+    public Integer getLeagueId() {
+        return leagueId;
     }
 
     public String getCaption() {
