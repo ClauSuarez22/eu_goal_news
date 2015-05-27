@@ -6,24 +6,36 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.larvalabs.svgandroid.SVG;
+import com.larvalabs.svgandroid.SVGParser;
 
 import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Scanner;
 
+import uy.edu.ucu.eu_goal_news.Model.Match;
 import uy.edu.ucu.eu_goal_news.Model.MatchDetails;
 import uy.edu.ucu.eu_goal_news.Model.Team;
+import uy.edu.ucu.eu_goal_news.svg.GetDrawableAsyncTask;
 
 public class MatchDetailsActivity extends Activity {
     private TextView mMatchday;
@@ -41,6 +53,9 @@ public class MatchDetailsActivity extends Activity {
     private TextView mH2HAwayTeamName;
     private ImageView mAwayTeamImg;
     private ImageView mHomeTeamImg;
+
+    private ListView mPreviousMatchesView;
+    private List<Match> previousMatches;
 
 
     @Override
@@ -66,6 +81,7 @@ public class MatchDetailsActivity extends Activity {
             mH2HHomeTeamName = (TextView) findViewById(R.id.h2h_home_team_name);
             mH2HAwayTeamName = (TextView) findViewById(R.id.h2h_away_team_name);
             mH2HDraws = (TextView) findViewById(R.id.h2h_draws);
+            mPreviousMatchesView = (ListView) findViewById(R.id.h2h_previous_matches);
             mHomeTeamImg = (ImageView) findViewById(R.id.home_team_img);
             mAwayTeamImg = (ImageView) findViewById(R.id.away_team_img);
 
@@ -146,6 +162,10 @@ public class MatchDetailsActivity extends Activity {
         public void onPostExecute(MatchDetails matchDetails){
 
             if(matchDetails != null) {
+                previousMatches = matchDetails.getPreviousMatches();
+                Toast.makeText(mContext, "previous matches largo: " + previousMatches.size(), Toast.LENGTH_SHORT).show();
+                mPreviousMatchesView.setAdapter(new MatchListAdapter());
+
                 mMatchday.setText("" + matchDetails.getMatchday());
                 mMatchStatus.setText("" + matchDetails.getStatus());
                 mMatchDate.setText(matchDetails.getStartDate());
@@ -167,12 +187,29 @@ public class MatchDetailsActivity extends Activity {
                 *   Team awayTeam = mTeamDao.findByName( matchDetails.getAwayTeamName() );
                 *   mTeamDao.close();
                 * */
+                Team homeTeam = new Team();
+                Team awayTeam = new Team();
 
+                homeTeam.setName("SC Freiburg");
+                homeTeam.setShortName("Freiburg");
+                homeTeam.setCode("SCF");
+                homeTeam.setSquadMarketValue("54,500,000 €");
+                homeTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/de/f/f1/SC-Freiburg_Logo-neu.svg");
+                homeTeam.setPlayersUrl("http://api.football-data.org/alpha/teams/17/players");
 
+                awayTeam.setName("1. FSV Mainz 05");
+                awayTeam.setShortName("Mainz");
+                awayTeam.setCode("M05");
+                awayTeam.setSquadMarketValue("75,200,000 €");
+                awayTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/de/0/0b/FSV_Mainz_05_Logo.svg");
+                awayTeam.setPlayersUrl("http://api.football-data.org/alpha/teams/15/players");
 
+                new GetDrawableAsyncTask( MatchDetailsActivity.this, mHomeTeamImg )
+                        .execute(homeTeam.getCrestUrl());
 
-                //this.mHomeTeamImg = (ImageView) findViewById(R.id.home_team_img);
-            //mProthis.mAwayTeamImg = (ImageView) findViewById(R.id.away_team_img);
+                new GetDrawableAsyncTask( MatchDetailsActivity.this, mAwayTeamImg )
+                        .execute(awayTeam.getCrestUrl());
+
             }
             else{
                 Toast.makeText(mContext, "Error downloading teams details", Toast.LENGTH_SHORT).show();
@@ -185,44 +222,46 @@ public class MatchDetailsActivity extends Activity {
         }
     }
 
-    private class DownloadMoviePosterAsyncTask extends AsyncTask<String, Void, Bitmap>{
+
+    private class MatchListAdapter extends BaseAdapter {
 
         @Override
-        protected Bitmap doInBackground(String... params) {
-            String imageUrl = params[0];
-            HttpURLConnection connection = null;
-            Bitmap poster = null;
-            try {
-                URL url = new URL(imageUrl);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setConnectTimeout(3000);
-
-                InputStream is = connection.getInputStream();
-                poster = BitmapFactory.decodeStream(is);
-                is.close();
-
-                return poster;
-
-            }catch (Exception ex){
-                ex.printStackTrace();
-            }finally {
-                if(connection != null) connection.disconnect();
-            }
-
-            return poster;
-
+        public int getCount() {
+            return previousMatches.size();
         }
 
         @Override
-        public void onPostExecute(Bitmap poster){
+        public Object getItem(int position) { return previousMatches.get(position); }
 
-            if(poster != null){
-               /* mMovieImage.setImageBitmap(poster);
-                mMovieImage.setVisibility(View.VISIBLE);
-                mProgressBar.setVisibility(View.GONE);      */
-            }
-
+        @Override
+        public long getItemId(int position) {
+            return previousMatches.get(position).getDate().getTime();
         }
 
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View matchView = convertView;
+            if (matchView == null) {
+                matchView = inflater.inflate(R.layout.match_details_h2h_list_item, null);
+            }
+
+            TextView matchDate = (TextView) matchView.findViewById(R.id.h2h_match_date);
+            TextView matchHomeTeamName = (TextView) matchView.findViewById(R.id.h2h_home_team_name);
+            TextView matchAwayTeamName = (TextView) matchView.findViewById(R.id.h2h_away_team_name);
+            TextView matchHomeTeamGoals = (TextView) matchView.findViewById(R.id.h2h_home_team_goals);
+            TextView matchAwayTeamGoals = (TextView) matchView.findViewById(R.id.h2h_away_team_goals);
+
+            Match currentMatch = previousMatches.get(position);
+            matchDate.setText(currentMatch.getDateStringFormat());
+            matchHomeTeamName.setText(currentMatch.getHomeTeamName());
+            matchAwayTeamName.setText(currentMatch.getAwayTeamName());
+            matchHomeTeamGoals.setText("" + currentMatch.getGoalsHomeTeam());
+            matchAwayTeamGoals.setText("" + currentMatch.getGoalsAwayTeam());
+
+            return matchView;
+        }
     }
 }

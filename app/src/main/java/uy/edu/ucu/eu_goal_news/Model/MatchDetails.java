@@ -1,5 +1,7 @@
 package uy.edu.ucu.eu_goal_news.Model;
 
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +63,8 @@ public class MatchDetails {
         this.homeTeamWins = head2head.getInt("homeTeamWins");
         this.awayTeamWins = head2head.getInt("awayTeamWins");
         this.draws = head2head.getInt("draws");
+        this.parsePreviousMatches(head2head.getJSONArray("fixtures"));
+
     }
 
     private void parsePreviousMatches(JSONArray arrayPreviousMatches){

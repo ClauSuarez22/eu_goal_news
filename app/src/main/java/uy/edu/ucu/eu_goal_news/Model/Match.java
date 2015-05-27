@@ -77,6 +77,11 @@ public class Match {
         return date;
     }
 
+    public String getDateStringFormat(){
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.format(this.date);
+    }
+
     public String getStatus() {
         return status;
     }

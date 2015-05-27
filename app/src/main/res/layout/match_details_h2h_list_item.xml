@@ -15,20 +15,22 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/h2h_match_date"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/h2h_match_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center|left"
-                    android:textSize="18sp"
-                    android:padding ="10dp"
-                    android:text="dd/MM/yyyy"
-                    android:textStyle="normal"/>
-            </LinearLayout>
+                android:gravity="center|left"
+                android:padding="5dp"
+                style="@style/letterStyle"
+                android:text="dd/MM/yyyy"
+                android:textStyle="normal"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="0.5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
         </LinearLayout>
 
         <LinearLayout
@@ -43,41 +45,27 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_weight="3"
-                    android:layout_height="match_parent"
-                    android:layout_width="0dp"
-                    android:orientation="horizontal">
-
                     <TextView
                         android:id="@+id/h2h_home_team_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="@dimen/match_details_h2h_team_name"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:gravity="center|left"
-                        android:textSize="18sp"
-                        android:padding ="10dp"
+                        android:padding="5dp"
+                        style="@style/letterStyle"
                         android:text="Home Team Name"
                         android:textStyle="normal"/>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:layout_width="0dp"
-                    android:orientation="horizontal">
-
                     <TextView
                         android:id="@+id/h2h_home_team_goals"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center_horizontal"
-                        android:textSize="25sp"
-                        android:padding ="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        style="@style/letterStyle"
                         android:text="0"
                         android:textStyle="normal"/>
-
-                </LinearLayout>
 
             </LinearLayout>
 
@@ -87,43 +75,27 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_weight="3"
-                    android:layout_height="match_parent"
-                    android:layout_width="0dp"
-                    android:orientation="horizontal">
-
                     <TextView
                         android:id="@+id/h2h_away_team_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="@dimen/match_details_h2h_team_name"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:gravity="center|left"
-                        android:textSize="18sp"
-                        android:padding ="10dp"
+                        android:padding="5dp"
+                        style="@style/letterStyle"
                         android:text="Away Team Name"
                         android:textStyle="normal"/>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:layout_width="0dp"
-                    android:orientation="horizontal">
-
                     <TextView
                         android:id="@+id/h2h_away_team_goals"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center_horizontal"
-                        android:textSize="25sp"
-                        android:padding ="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        style="@style/letterStyle"
                         android:text="0"
                         android:textStyle="normal"/>
-
-                </LinearLayout>
-
-
 
             </LinearLayout>
 
