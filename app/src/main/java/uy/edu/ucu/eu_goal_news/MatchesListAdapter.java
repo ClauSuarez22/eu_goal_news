@@ -85,11 +85,6 @@ public class MatchesListAdapter extends ArrayAdapter<Match>  {
         return rowView;
     }
 
-    public String getMatchLeagueName(int position) {
-        int leagueId = this.getItem(position).getMatchLeagueId();
-        return this.getLeagueName(leagueId);
-    }
-
     private String getLeagueName(int matchLeagueId){
         int leagueId;
         for (Soccerseason item : mLeagues.values()){

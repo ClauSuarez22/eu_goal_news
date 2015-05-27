@@ -1,9 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              tools:context=".MatchDetailsActivity">
+              android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,7 +43,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/matchday"
+                        android:id="@+id/match_league_date"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:padding="10dp"
@@ -64,7 +63,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/match_status"
+                    android:id="@+id/match_state"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="20sp"
@@ -113,10 +112,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center|left"
-                        android:textSize="12sp"
+                        android:textSize="17sp"
                         android:padding ="10dp"
                         android:text="Start time"
-
                         android:textStyle="normal"/>
                 </LinearLayout>
 
@@ -202,7 +200,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center|left"
-                        android:textSize="18sp"
+                        android:textSize="25sp"
                         android:padding ="10dp"
                         android:text="Team Name"
                         android:textStyle="normal"/>
@@ -220,7 +218,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_horizontal|center"
-                        android:textSize="35sp"
+                        android:textSize="50sp"
                         android:padding="5dp"
                         android:text="0"
                         android:textStyle="bold"/>
@@ -236,8 +234,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="2dp"
                 android:text="@string/vs_string"
-                android:textSize="35sp"
+                android:textSize="45sp"
                 android:gravity="center_horizontal"
                 android:textStyle="bold|italic"/>
 
@@ -279,7 +278,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center|left"
-                        android:textSize="18sp"
+                        android:textSize="25sp"
                         android:padding ="10dp"
                         android:text="Team Name"
                         android:textStyle="normal"/>
@@ -297,7 +296,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_horizontal|center"
-                        android:textSize="35sp"
+                        android:textSize="50sp"
                         android:padding="5dp"
                         android:text="0"
                         android:textStyle="bold"/>
@@ -377,7 +376,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center|left"
-                                android:textSize="18sp"
+                                android:textSize="20sp"
                                 android:padding ="10dp"
                                 android:text="Home Team Name"
                                 android:textStyle="normal"/>
@@ -395,7 +394,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center_horizontal"
-                                android:textSize="18sp"
+                                android:textSize="25sp"
                                 android:padding ="10dp"
                                 android:text="0"
                                 android:textStyle="bold"/>
@@ -421,7 +420,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center|left"
-                                android:textSize="18sp"
+                                android:textSize="20sp"
                                 android:padding ="10dp"
                                 android:text="Away Team Name"
                                 android:textStyle="normal"/>
@@ -439,7 +438,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center_horizontal"
-                                android:textSize="18sp"
+                                android:textSize="25sp"
                                 android:padding ="10dp"
                                 android:text="0"
                                 android:textStyle="bold"/>
@@ -476,7 +475,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center|right"
-                            android:textSize="18sp"
+                            android:textSize="25sp"
                             android:padding ="10dp"
                             android:text="0"
                             android:textStyle="bold"/>

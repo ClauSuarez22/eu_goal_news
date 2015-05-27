@@ -7,6 +7,6 @@
     <dimen name="timeTextSize">8sp</dimen>
     <dimen name="letterSize">12dp</dimen>
     <dimen name="match_details_header_height">90dp</dimen>
-    <dimen name="match_details_content_center">40dp</dimen>
+    <dimen name="match_details_content_center">60dp</dimen>
     <dimen name="match_details_h2h_height">130dp</dimen>
 </resources>
