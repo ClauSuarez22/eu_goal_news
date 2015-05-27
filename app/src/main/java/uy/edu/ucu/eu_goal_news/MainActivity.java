@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -117,9 +118,10 @@ public class MainActivity extends ListActivity{
             HttpURLConnection connection = null;
 
             // Get current Day
-            Calendar calendar = Calendar.getInstance();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String currentDay = dateFormat.format(calendar.getTime());
+            //Calendar calendar = Calendar.getInstance();
+            //DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            //String currentDay = dateFormat.format(calendar.getTime());
+            String currentDay = "2015-04-18";
 
             try {
                 URL url = new URL(String.format(mGetMatchesTodayApiUrl, currentDay, currentDay));
@@ -151,6 +153,11 @@ public class MainActivity extends ListActivity{
                     }
                 });
 
+                if ( league.compareTo( "All leagues" ) == 0 )
+                {
+                    return orderMatchesForFavouriteLeague(matchList);
+                }
+
                 return matchList;
 
             } catch (IOException | JSONException e) {
@@ -159,6 +166,38 @@ public class MainActivity extends ListActivity{
                 if(connection != null)  connection.disconnect();
             }
             return null;
+        }
+
+        public ArrayList orderMatchesForFavouriteLeague( ArrayList matchList )
+        {
+            SharedPreferences sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
+            int favouriteLeague = sharedPreferences.getInt( "favourite_league", -1);
+
+            ArrayList matchesFavouriteLeague = new ArrayList<>();
+
+            if ( favouriteLeague != -1 )
+            {
+                for( int i = 0; i < matchList.size(); i++ )
+                {
+                    Match match = (Match) matchList.get( i );
+                    int matchLeague = match.getMatchLeagueId();
+
+                    if ( matchLeague == favouriteLeague )
+                    {
+                        matchesFavouriteLeague.add( match );
+                        matchList.remove( i );
+                    }
+                }
+
+                ArrayList finalMatchList = matchesFavouriteLeague;
+                finalMatchList.addAll( matchList );
+
+                return finalMatchList;
+
+            }
+
+            return matchList;
+
         }
 
         @Override

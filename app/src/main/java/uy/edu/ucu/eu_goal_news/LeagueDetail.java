@@ -6,6 +6,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,6 +32,9 @@ import uy.edu.ucu.eu_goal_news.Model.TeamLeague;
 
 public class LeagueDetail extends ListActivity {
 
+    String leagueName;
+    int leagueId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +45,11 @@ public class LeagueDetail extends ListActivity {
         if ( extras != null )
         {
             String leagueName = extras.getString( "leagueName" );
+            this.leagueName = leagueName;
             String selectedLeagueUrl = extras.getString("selectedLeagueUrl");
+            String[] selectedLeagueUrlList = selectedLeagueUrl.split("/");
+            int selectedLeagueUrlListLength = selectedLeagueUrlList.length;
+            this.leagueId = Integer.parseInt( selectedLeagueUrlList[ selectedLeagueUrlListLength - 2 ] );
 
             getActionBar().setTitle( leagueName );
 
@@ -65,10 +73,34 @@ public class LeagueDetail extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent homeIntent = new Intent(this, MainActivity.class);
-                startActivity(homeIntent);
+                //Intent homeIntent = new Intent(this, MainActivity.class);
+                //startActivity(homeIntent);
+                finish();
+                break;
+            case R.id.action_add_favourite:
+                SharedPreferences sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
+                int favouriteLeague = sharedPreferences.getInt( "favourite_league", -1);
+                SharedPreferences.Editor editor  = sharedPreferences.edit();
+
+                if ( favouriteLeague == -1 || favouriteLeague != this.leagueId )
+                {
+                    editor.putInt("favourite_league", this.leagueId);
+                    editor.commit();
+                    Toast.makeText(LeagueDetail.this, this.leagueName + " is your favourite league!", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    editor.remove( "favourite_league" );
+                    editor.commit();
+                    Toast.makeText(LeagueDetail.this, this.leagueName + " is not your favourite league anymore!", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+            default:
+                break;
         }
-        return (super.onOptionsItemSelected(item));
+
+        return true;
     }
 
     // Async Task for Team Leagues
