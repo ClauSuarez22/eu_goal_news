@@ -34,6 +34,8 @@ import java.util.Scanner;
 
 import uy.edu.ucu.eu_goal_news.Model.Match;
 import uy.edu.ucu.eu_goal_news.Model.Soccerseason;
+import uy.edu.ucu.eu_goal_news.Model.Team;
+import uy.edu.ucu.eu_goal_news.db.TeamDAO;
 
 
 public class MainActivity extends ListActivity{
@@ -45,6 +47,7 @@ public class MainActivity extends ListActivity{
     private String selectedLeague;
     private String selectedLeagueTableUrl;
     private Menu mMenu;
+    private TeamDAO mTeamDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,23 @@ public class MainActivity extends ListActivity{
 
         // Populate leagues spinner
         mSpinner = (Spinner)findViewById(R.id.spinner_leagues);
+
+        /*mTeamDAO = new TeamDAO(this);
+        mTeamDAO.open();
+
+        String name = "prueba nombre 1";
+        String code = "prueba code 2";
+        String shortName = "prueba shortName 3";
+        String squadMarketValue = "prueba squadMarketValue 4";
+        String crestUrl = "prueba crestUrl 5";
+        String fixturesUrl = "prueba fixturesUrl 6";
+        String playersUrl = "prueba playersUrl 7";
+
+        Team team = mTeamDAO.create(name, code, shortName, squadMarketValue, crestUrl, fixturesUrl, playersUrl);
+
+        Team teamFoundByName = mTeamDAO.findByName( name );
+        Team teamFoundByShortName = mTeamDAO.findByShortName( shortName );
+        Team teamFoundByCode = mTeamDAO.findByCode( code );*/
 
         new GetSeasonsAsyncTask(MainActivity.this).execute();
     }
