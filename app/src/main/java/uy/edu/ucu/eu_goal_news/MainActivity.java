@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class MainActivity extends ListActivity{
 
     //public ArrayList<String> leagues;
     private Spinner mSpinner;
+    private ListView mMatchList;
     private String[] mLeagues;
     private HashMap<String,Soccerseason> mLeaguesHash;
     private String selectedLeague;
@@ -225,7 +227,20 @@ public class MainActivity extends ListActivity{
 
             // initialize adapter with matches
             if(matches != null) {
-                setListAdapter(new MatchesListAdapter(mContext, R.layout.match_list_item, matches, mLeaguesHash));
+                ListView matchAdapterView =(ListView) findViewById(android.R.id.list);
+                final MatchesListAdapter matchesAdapter = new MatchesListAdapter(mContext, R.layout.match_list_item, matches, mLeaguesHash);
+                matchAdapterView.setAdapter(matchesAdapter);
+                matchAdapterView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(MainActivity.this, MatchDetailsActivity.class);
+                        intent.putExtra("selectedMatchUrl", matchesAdapter.getItem(position).getSelfUrl());
+                        intent.putExtra("leagueName", matchesAdapter.getMatchLeagueName(position));
+                        startActivity(intent);
+                    }
+                });
+
+
             }else{
                 Toast.makeText(mContext, "Error downloading matches", Toast.LENGTH_SHORT).show();
             }
