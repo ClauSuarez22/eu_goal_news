@@ -121,7 +121,7 @@ public class MatchDetailsActivity extends Activity {
 
         @Override
         public void onPreExecute(){
-            mProgressDialog = ProgressDialog.show(MatchDetailsActivity.this, null, "Cargando detalles del partido ...", true, false);
+            mProgressDialog = ProgressDialog.show(MatchDetailsActivity.this, null, "Loading...", true, false);
         }
 
         @Override
@@ -190,18 +190,18 @@ public class MatchDetailsActivity extends Activity {
                 Team homeTeam = new Team();
                 Team awayTeam = new Team();
 
-                homeTeam.setName("SC Freiburg");
-                homeTeam.setShortName("Freiburg");
-                homeTeam.setCode("SCF");
-                homeTeam.setSquadMarketValue("54,500,000 €");
-                homeTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/de/f/f1/SC-Freiburg_Logo-neu.svg");
-                homeTeam.setPlayersUrl("http://api.football-data.org/alpha/teams/17/players");
+                homeTeam.setName("SpVgg Greuther Fürth");
+                homeTeam.setShortName("Fürth");
+                homeTeam.setCode("GRE");
+                        homeTeam.setSquadMarketValue("17,975,000 €");
+                homeTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/commons/0/04/Eintracht_Frankfurt_Logo.svg");
+                homeTeam.setPlayersUrl("http://api.football-data.org/alpha/teams/21/players");
 
                 awayTeam.setName("1. FSV Mainz 05");
                 awayTeam.setShortName("Mainz");
                 awayTeam.setCode("M05");
                 awayTeam.setSquadMarketValue("75,200,000 €");
-                awayTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/de/0/0b/FSV_Mainz_05_Logo.svg");
+                awayTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/commons/c/c5/Logo_FC_Bayern_München.svg");
                 awayTeam.setPlayersUrl("http://api.football-data.org/alpha/teams/15/players");
 
                 new GetDrawableAsyncTask( MatchDetailsActivity.this, mHomeTeamImg )
