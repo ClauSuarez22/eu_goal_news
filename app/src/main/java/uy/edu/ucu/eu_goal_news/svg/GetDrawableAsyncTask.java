@@ -10,9 +10,7 @@ import com.larvalabs.svgandroid.SVG;
 import com.larvalabs.svgandroid.SVGParser;
 
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.net.URLEncoder;
 
 import uy.edu.ucu.eu_goal_news.R;
 
@@ -31,14 +29,11 @@ public class GetDrawableAsyncTask extends AsyncTask<String, Void, Drawable> {
     @Override
     protected Drawable doInBackground(String... params) {
 
-        String urlString = params[0];
+        String url = params[0];
         HttpURLConnection connection = null;
         Drawable drawable = null;
         try {
-            URL url = new URL(urlString);
-            URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
-            urlString = uri.toASCIIString();
-            connection = (HttpURLConnection) new URL(urlString).openConnection();
+            connection = (HttpURLConnection) new URL(url).openConnection();
             SVG svgLogo = SVGParser.getSVGFromInputStream(connection.getInputStream());
             drawable = svgLogo.createPictureDrawable();
 
