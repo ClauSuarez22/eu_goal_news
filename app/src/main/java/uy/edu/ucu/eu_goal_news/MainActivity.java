@@ -335,14 +335,18 @@ public class MainActivity extends ListActivity{
                 mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                        MenuItem item = mMenu.findItem(R.id.action_league_detail);
+
                         if ( mLeagues[position].compareTo( "All leagues" ) != 0 )
                         {
                             selectedLeagueTableUrl = mLeaguesHash.get(mLeagues[position]).getLeagueTable();
-                            mMenu.findItem(R.id.action_league_detail).setEnabled(true);
+                            item.setEnabled(true);
+                            item.getIcon().setAlpha(255);
                         }
                         else
                         {
-                            mMenu.findItem(R.id.action_league_detail).setEnabled(false);
+                            item.setEnabled(false);
+                            item.getIcon().setAlpha(30);
                         }
 
                         selectedLeague = mLeagues[position];
