@@ -4,9 +4,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,12 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.larvalabs.svgandroid.SVG;
-import com.larvalabs.svgandroid.SVGParser;
-
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -35,7 +28,6 @@ import java.util.Scanner;
 import uy.edu.ucu.eu_goal_news.Model.Match;
 import uy.edu.ucu.eu_goal_news.Model.MatchDetails;
 import uy.edu.ucu.eu_goal_news.Model.Team;
-import uy.edu.ucu.eu_goal_news.svg.GetDrawableAsyncTask;
 
 public class MatchDetailsActivity extends Activity {
     private TextView mMatchday;
@@ -190,24 +182,24 @@ public class MatchDetailsActivity extends Activity {
                 Team homeTeam = new Team();
                 Team awayTeam = new Team();
 
-                homeTeam.setName("SpVgg Greuther Fürth");
-                homeTeam.setShortName("Fürth");
+                homeTeam.setName("SpVgg Greuther FÃ¼rth");
+                homeTeam.setShortName("Fï¿½rth");
                 homeTeam.setCode("GRE");
-                        homeTeam.setSquadMarketValue("17,975,000 €");
-                homeTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/commons/0/04/Eintracht_Frankfurt_Logo.svg");
+                        homeTeam.setSquadMarketValue("17,975,000 ï¿½");
+                homeTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/de/9/96/Logo_Olympiakos_PirÃ¤us.svg");
                 homeTeam.setPlayersUrl("http://api.football-data.org/alpha/teams/21/players");
 
                 awayTeam.setName("1. FSV Mainz 05");
                 awayTeam.setShortName("Mainz");
                 awayTeam.setCode("M05");
-                awayTeam.setSquadMarketValue("75,200,000 €");
-                awayTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/commons/c/c5/Logo_FC_Bayern_München.svg");
+                awayTeam.setSquadMarketValue("75,200,000 ï¿½");
+                awayTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/de/e/e7/Logo_TSG_Hoffenheim.svg");
                 awayTeam.setPlayersUrl("http://api.football-data.org/alpha/teams/15/players");
 
-                new GetDrawableAsyncTask( MatchDetailsActivity.this, mHomeTeamImg )
+                new GetSVGAsyncTask( MatchDetailsActivity.this, mHomeTeamImg )
                         .execute(homeTeam.getCrestUrl());
 
-                new GetDrawableAsyncTask( MatchDetailsActivity.this, mAwayTeamImg )
+                new GetSVGAsyncTask( MatchDetailsActivity.this, mAwayTeamImg )
                         .execute(awayTeam.getCrestUrl());
 
             }

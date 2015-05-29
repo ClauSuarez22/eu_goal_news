@@ -1,10 +1,13 @@
-package uy.edu.ucu.eu_goal_news.svg;
+package uy.edu.ucu.eu_goal_news;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.larvalabs.svgandroid.SVG;
 import com.larvalabs.svgandroid.SVGParser;
@@ -19,11 +22,11 @@ import uy.edu.ucu.eu_goal_news.R;
 /**
  * Created by albarenguenatalia on 27/05/2015.
  */
-public class GetDrawableAsyncTask extends AsyncTask<String, Void, Drawable> {
+public class GetSVGAsyncTask extends AsyncTask<String, Void, Drawable> {
     private Context mContext;
     private ImageView imgView;
 
-    public GetDrawableAsyncTask(Context context, ImageView imgView){
+    public GetSVGAsyncTask(Context context, ImageView imgView){
         this.mContext = context;
         this.imgView = imgView;
     }
@@ -35,14 +38,15 @@ public class GetDrawableAsyncTask extends AsyncTask<String, Void, Drawable> {
         HttpURLConnection connection = null;
         Drawable drawable = null;
         try {
-            URL url = new URL(urlString);
-            URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
-            urlString = uri.toASCIIString();
-            connection = (HttpURLConnection) new URL(urlString).openConnection();
+            int endIndex = urlString.lastIndexOf('/');
+            String logoQuery = urlString.substring(endIndex + 1);
+            String url = urlString.substring(0, endIndex + 1);
+            connection = (HttpURLConnection) new URL(url + URLEncoder.encode(logoQuery, "UTF-8")).openConnection();
             SVG svgLogo = SVGParser.getSVGFromInputStream(connection.getInputStream());
             drawable = svgLogo.createPictureDrawable();
 
         } catch (Exception e) {
+            Log.d(GetSVGAsyncTask.class.getSimpleName(), e.getMessage());
             e.printStackTrace();
         }finally {
             if(connection != null) connection.disconnect();
