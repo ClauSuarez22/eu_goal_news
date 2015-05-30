@@ -5,10 +5,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-/**
- * Created by juliorima on 26/04/2015.
- */
-public class Soccerseason {
+public class Soccerseason implements IListViewType {
 
     private String caption;
     private String league;
@@ -47,7 +44,15 @@ public class Soccerseason {
 
     }
 
-    public Integer getLeagueId() {
+    public int getViewType(){
+        return SECTION;
+    }
+
+    public int getLeagueId() {
+        return leagueId;
+    }
+
+    public Integer getIntegerLeagueId() {
         return leagueId;
     }
 

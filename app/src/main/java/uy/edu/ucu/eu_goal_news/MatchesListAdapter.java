@@ -12,32 +12,24 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
+import uy.edu.ucu.eu_goal_news.Model.IListViewType;
 import uy.edu.ucu.eu_goal_news.Model.Match;
 import uy.edu.ucu.eu_goal_news.Model.Soccerseason;
 
-/**
- * Created by juliorima on 03/05/2015.
- */
-public class MatchesListAdapter extends ArrayAdapter<Match>  {
-/**
- * Adapter that turns forecasts into Views that will be displayed in a ListView
- */
-    private static final String TAG = MatchesListAdapter.class.getSimpleName();
-    private final Context mContext;
-    private final List<Match> mMatches;
-    private ArrayList<Integer> mLeaguesPopulated;
-    private HashMap<String,Soccerseason> mLeagues;
+public class MatchesListAdapter extends ArrayAdapter<IListViewType>  {
 
-    public MatchesListAdapter(Context context, int resource, List<Match> matches, HashMap<String,Soccerseason> leagues) {
-        super(context, resource, matches);
+    private final Context mContext;
+
+    private List<IListViewType> mItems;
+
+    public MatchesListAdapter(Context context, int resource, List<IListViewType> items) {
+        super(context, resource, items);
 
         this.mContext = context;
-        this.mMatches = matches;
-        this.mLeaguesPopulated = new ArrayList<>();
-        this.mLeagues = leagues;
+        this.mItems = new ArrayList<>();
+        this.mItems.addAll(items);
     }
 
     @Override
@@ -45,63 +37,79 @@ public class MatchesListAdapter extends ArrayAdapter<Match>  {
 
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.match_list_item, parent, false);
 
-        if (position == 0){
-            mLeaguesPopulated = new ArrayList<>();
+        View rowView;
+        int viewType = mItems.get(position).getViewType();
+
+        if(viewType == IListViewType.SECTION){
+            rowView = inflater.inflate(R.layout.match_list_section, parent, false);
+        }else{
+            rowView = inflater.inflate(R.layout.match_list_item, parent, false);
         }
 
-        TextView dateTextView = (TextView) rowView.findViewById(R.id.day_match);
-        TextView timeTextView = (TextView) rowView.findViewById(R.id.time_match);
-        TextView homeTeamTextView = (TextView) rowView.findViewById(R.id.home_team);
-        TextView awayTeamTextView = (TextView) rowView.findViewById(R.id.away_team);
+        if (viewType == IListViewType.ITEM) {
 
-        // Get and Format DateTime of the Match
-        Date matchDate = this.mMatches.get(position).getDate();
-        DateFormat formatDate = new SimpleDateFormat("dd/MM/yy");
-        dateTextView.setText(formatDate.format(matchDate));
-        DateFormat formatTime = new SimpleDateFormat("HH:mm");
-        timeTextView.setText(formatTime.format(matchDate));
+            Match match = (Match)mItems.get(position);
 
-        homeTeamTextView.setText(this.mMatches.get(position).getHomeTeamName());
-        awayTeamTextView.setText(this.mMatches.get(position).getAwayTeamName());
+            LinearLayout matchItem = (LinearLayout)rowView.findViewById(R.id.layout_match_item);
 
-        int leagueId = this.mMatches.get(position).getMatchLeagueId();
-        if (!mLeaguesPopulated.contains(leagueId)){
-            TextView leagueNameTextView = (TextView) rowView.findViewById(R.id.league_name);
-            leagueNameTextView.setVisibility(View.VISIBLE); // Not working
+            TextView dateTextView = (TextView) matchItem.findViewById(R.id.day_match);
+            TextView timeTextView = (TextView) rowView.findViewById(R.id.time_match);
+            TextView homeTeamTextView = (TextView) rowView.findViewById(R.id.home_team);
+            TextView awayTeamTextView = (TextView) rowView.findViewById(R.id.away_team);
 
-            leagueNameTextView.setText(getLeagueName(leagueId));
+            // Get and Format DateTime of the Match
+            Date matchDate = match.getDate();
+            DateFormat formatDate = new SimpleDateFormat("dd/MM/yy");
+            dateTextView.setText(formatDate.format(matchDate));
+            DateFormat formatTime = new SimpleDateFormat("HH:mm");
+            timeTextView.setText(formatTime.format(matchDate));
 
-            View hSeparator = rowView.findViewById(R.id.horizontal_separator);
-            hSeparator.setVisibility(View.VISIBLE);
+            homeTeamTextView.setText(match.getHomeTeamName());
+            awayTeamTextView.setText(match.getAwayTeamName());
 
-            mLeaguesPopulated.add(leagueId);
         }else{
-            TextView leagueNameTextView = (TextView) rowView.findViewById(R.id.league_name);
-            leagueNameTextView.setVisibility(View.GONE); // Not working
+
+            Soccerseason season = (Soccerseason)mItems.get(position);
+            TextView sectionNameTextView = (TextView)rowView.findViewById(R.id.section_name);
+            sectionNameTextView.setText(season.getCaption());
         }
 
         return rowView;
     }
 
-    public String getMatchLeagueName(int position) {
-        int leagueId = this.getItem(position).getMatchLeagueId();
-        return this.getLeagueName(leagueId);
+    @Override
+    public int getCount() {
+        return mItems.size();
     }
 
-    private String getLeagueName(int matchLeagueId){
-        int leagueId;
-        for (Soccerseason item : mLeagues.values()){
-            if (item != null) {
-                leagueId = item.getLeagueId();
-                if (leagueId == matchLeagueId) {
-                    return item.getCaption();
-                }
+    @Override
+    public IListViewType getItem(int position) {
+        return mItems.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+
+    public void setmItems(List<IListViewType> mItems) {
+        this.mItems.clear();
+        this.mItems.addAll(mItems);
+        notifyDataSetChanged();
+    }
+
+    public String getMatchLeagueName(int position){
+        int leagueId = mItems.get(position).getLeagueId();
+        for(IListViewType item : mItems){
+            if(item.getViewType() == IListViewType.SECTION
+                    && item.getLeagueId() == leagueId){
+                Soccerseason season = (Soccerseason)item;
+                return season.getCaption();
             }
         }
 
         return "";
     }
-
 }

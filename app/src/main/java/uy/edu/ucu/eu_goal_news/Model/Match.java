@@ -1,20 +1,14 @@
 package uy.edu.ucu.eu_goal_news.Model;
 
-import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.zip.DataFormatException;
 
-/**
- * Created by juliorima on 28/04/2015.
- */
-public class Match {
+public class Match implements IListViewType {
 
     private Date date;
     private String status;
@@ -61,12 +55,20 @@ public class Match {
         this.showLeagueName = false;
     }
 
+    public int getViewType(){
+        return ITEM;
+    }
+
     public Boolean getShowLeagueName() {
         return showLeagueName;
     }
 
     public void setShowLeagueName(Boolean showLeagueName) {
         this.showLeagueName = showLeagueName;
+    }
+
+    public int getLeagueId(){
+        return matchLeagueId;
     }
 
     public Integer getMatchLeagueId() {
