@@ -3,131 +3,14 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              tools:context=".MatchDetailsActivity">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/match_details_header_height"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_height="0dp"
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center|left"
-                        android:padding="5dp"
-                        android:textSize="18sp"
-                        style="@style/letterStyle"
-                        android:text="Matchday"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:id="@+id/matchday"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="5dp"
-                        android:gravity="center_horizontal"
-                        style="@style/letterStyle"
-                        android:textSize="18sp"
-                        android:text="1"
-                        android:textStyle="bold"/>
-                 </LinearLayout>
-
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_height="0dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/match_status"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center|left"
-                    android:padding="5dp"
-                    android:textSize="18sp"
-                    style="@style/letterStyle"
-                    android:text="FINAL"
-                    android:textStyle="normal"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_height="0dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/match_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center|right"
-                    android:padding="5dp"
-                    android:textSize="18sp"
-                    style="@style/letterStyle"
-                    android:text="dd/MM/yyyy"
-                    android:textStyle="normal"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_height="0dp"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center|left"
-                    android:padding="5dp"
-                    android:textSize="18sp"
-                    style="@style/letterStyle"
-                    android:text="Start time"
-
-                    android:textStyle="normal"/>
-
-                <TextView
-                    android:id="@+id/match_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center|right"
-                    android:padding="5dp"
-                    android:textSize="18sp"
-                    style="@style/letterStyle"
-                    android:text="00:00 AM"
-                    android:textStyle="normal"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+              tools:context=".MatchDetailsActivity"
+              android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="0dp"
+        android:padding="10dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -137,12 +20,97 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:gravity="center|left"
-                android:padding="5dp"
-                android:textSize="18sp"
+                android:layout_weight="2"
+                android:textSize="16sp"
+                style="@style/letterStyle"
+                android:text="Matchday"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/matchday"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                style="@style/letterStyle"
+                android:textSize="16sp"
+                android:text="1"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/match_date"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="right"
+                android:textSize="16sp"
+                style="@style/letterStyle"
+                android:text="dd/MM/yyyy"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/match_status"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                style="@style/letterStyle"
+                android:text="FINAL"
+                android:textStyle="normal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="right"
+                android:textSize="16sp"
+                style="@style/letterStyle"
+                android:text="Start time"
+
+                android:textStyle="normal"/>
+
+            <TextView
+                android:id="@+id/match_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textSize="16sp"
+                style="@style/letterStyle"
+                android:text="00:00 AM"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="3"
+        android:layout_height="0dp"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/border_set">
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:textSize="14sp"
                 style="@style/letterStyle"
                 android:text="Home"
                 android:textStyle="normal"/>
@@ -152,17 +120,15 @@
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="match_parent"
-                android:padding="5dp"
                 />
 
             <TextView
                 android:id="@+id/home_team_name"
-                android:layout_width="@dimen/match_details_team_name"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|left"
-                android:padding="5dp"
-                android:textSize="20sp"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:textSize="18sp"
                 style="@style/letterStyle"
                 android:text="Away Team Name"
                 android:textStyle="normal"/>
@@ -172,9 +138,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:padding="2dp"
                 android:textSize="35sp"
+                android:gravity="center"
                 style="@style/letterStyle"
                 android:text="99"
                 android:textStyle="bold"/>
@@ -186,7 +151,8 @@
             android:layout_height="@dimen/match_details_content_center"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="4"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 style="@style/letterStyle"
@@ -208,16 +174,14 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="match_parent"
-                    android:padding="5dp"
                     />
                 <TextView
                     android:id="@+id/away_team_name"
-                    android:layout_width="@dimen/match_details_team_name"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center|left"
-                    android:padding="5dp"
-                    android:textSize="20sp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="18sp"
                     style="@style/letterStyle"
                     android:text="Home Team Name"
                     android:textStyle="normal"/>
@@ -228,19 +192,17 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="5dp"
                     android:textSize="30sp"
                     style="@style/letterStyle"
                     android:text="12"
                     android:textStyle="bold"/>
 
                <TextView
-                   android:layout_width="wrap_content"
+                   android:layout_width="0dp"
                    android:layout_height="match_parent"
-                   android:layout_weight="0.5"
-                   android:gravity="center|right"
-                   android:padding="5dp"
-                   android:textSize="18sp"
+                   android:layout_weight="2"
+                   android:gravity="center"
+                   android:textSize="14sp"
                    style="@style/letterStyle"
                    android:text="Away"
                    android:textStyle="normal"/>
@@ -251,24 +213,25 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="1.5"
+        android:layout_weight="3"
         android:layout_height="0dp"
-        android:orientation="vertical">
+        android:padding="10dp"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|left"
+            style="@style/letterStyle"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="Head to Head"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/match_details_h2h_height"
             android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center|left"
-                android:padding="5dp"
-                style="@style/letterStyle"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:text="Head to Head"/>
 
 
             <LinearLayout
@@ -294,8 +257,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center|left"
-                                android:padding="5dp"
-                                android:textSize="18sp"
+                                android:textSize="14sp"
                                 style="@style/letterStyle"
                                 android:text="Home Team Name"
                                 android:textStyle="normal"/>
@@ -306,8 +268,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:padding="5dp"
-                                android:textSize="18sp"
+                                android:textSize="14sp"
                                 style="@style/letterStyle"
                                 android:text="0"
                                 android:textStyle="bold"/>
@@ -328,8 +289,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center|left"
-                                android:padding="5dp"
-                                android:textSize="18sp"
+                                android:textSize="14sp"
                                 style="@style/letterStyle"
                                 android:text="Away Team Name"
                                 android:textStyle="normal"/>
@@ -341,8 +301,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:padding="5dp"
-                                android:textSize="18sp"
+                                android:textSize="14sp"
                                 style="@style/letterStyle"
                                 android:text="0"
                                 android:textStyle="bold"/>
@@ -350,6 +309,7 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_weight="0.5"
                     android:layout_width="0dp"
@@ -375,7 +335,7 @@
                             android:layout_weight="1"
                             android:gravity="center|left"
                             android:padding="5dp"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             style="@style/letterStyle"
                             android:text="Draws"
                             android:textStyle="normal"/>
@@ -386,7 +346,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:padding="5dp"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             style="@style/letterStyle"
                             android:text="0"
                             android:textStyle="bold"/>
@@ -399,7 +359,7 @@
             android:id="@+id/h2h_previous_matches"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@android:color/black"
+            android:divider="@color/silver"
             android:dividerHeight="0.5dp"/>
 
     </LinearLayout>
