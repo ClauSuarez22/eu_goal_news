@@ -16,6 +16,8 @@ public class TeamLeague {
     private Integer goalsAgainst;
     private Integer goalDifference;
 
+    public TeamLeague(){}
+
     public TeamLeague(JSONObject object) throws JSONException {
         this.teamName = object.getString("teamName");
         this.position = object.getInt("position");

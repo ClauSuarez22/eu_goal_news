@@ -131,6 +131,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/home_team"
             android:layout_weight="1"
             android:layout_height="0dp"
             android:layout_width="match_parent"
@@ -160,6 +161,7 @@
                 android:layout_width="@dimen/match_details_team_name"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:clickable="true"
                 android:gravity="center|left"
                 android:padding="5dp"
                 android:textSize="20sp"
@@ -198,6 +200,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/away_team"
             android:layout_weight="1"
             android:layout_height="0dp"
             android:layout_width="match_parent"
@@ -215,6 +218,7 @@
                     android:layout_width="@dimen/match_details_team_name"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:clickable="true"
                     android:gravity="center|left"
                     android:padding="5dp"
                     android:textSize="20sp"

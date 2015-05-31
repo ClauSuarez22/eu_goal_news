@@ -8,4 +8,5 @@
     <string name="title_activity_league_detail_adapter">LeagueDetailAdapter</string>
     <string name="vs_string">vs</string>
     <string name="title_activity_match_details">MatchDetailsActivity</string>
+    <string name="title_activity_team_details">TeamDetailsActivity</string>
 </resources>

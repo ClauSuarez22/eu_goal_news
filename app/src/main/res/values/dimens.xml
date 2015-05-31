@@ -11,4 +11,5 @@
     <dimen name="match_details_h2h_height">100dp</dimen>
     <dimen name="match_details_team_name">100dp</dimen>
     <dimen name="match_details_h2h_team_name">150dp</dimen>
+    <dimen name="team_logo_height">250dp</dimen>
 </resources>
