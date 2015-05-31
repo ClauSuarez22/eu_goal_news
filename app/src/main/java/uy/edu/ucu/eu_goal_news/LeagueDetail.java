@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -66,6 +67,19 @@ public class LeagueDetail extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_league_detail, menu);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
+        int favouriteLeague = sharedPreferences.getInt( "favourite_league", -1);
+        MenuItem item = menu.findItem( R.id.action_add_favourite );
+
+        if ( favouriteLeague == this.leagueId )
+        {
+            item.getIcon().setAlpha(255);
+        }
+        else
+        {
+            item.getIcon().setAlpha(30);
+        }
         return true;
     }
 
@@ -84,12 +98,14 @@ public class LeagueDetail extends ListActivity {
 
                 if ( favouriteLeague == -1 || favouriteLeague != this.leagueId )
                 {
+                    item.getIcon().setAlpha(255);
                     editor.putInt("favourite_league", this.leagueId);
                     editor.commit();
                     Toast.makeText(LeagueDetail.this, this.leagueName + " is your favourite league!", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
+                    item.getIcon().setAlpha(30);
                     editor.remove( "favourite_league" );
                     editor.commit();
                     Toast.makeText(LeagueDetail.this, this.leagueName + " is not your favourite league anymore!", Toast.LENGTH_SHORT).show();

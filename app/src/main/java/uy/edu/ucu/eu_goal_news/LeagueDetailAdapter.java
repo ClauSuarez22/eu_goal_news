@@ -1,6 +1,7 @@
 package uy.edu.ucu.eu_goal_news;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,15 @@ public class LeagueDetailAdapter extends ArrayAdapter<TeamLeague> {
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.team_league_list_item, parent, false);
+
+        if (pos < 4 )
+        {
+            rowView.setBackgroundColor( Color.parseColor("#E1F5A9") );
+        }
+        else if ( pos + 3 >= this.mTeamLeague.size())
+        {
+            rowView.setBackgroundColor( Color.parseColor("#F6CECE") );
+        }
 
         TextView teamNameView = (TextView) rowView.findViewById(R.id.team_name);
         TextView position = (TextView) rowView.findViewById(R.id.position);

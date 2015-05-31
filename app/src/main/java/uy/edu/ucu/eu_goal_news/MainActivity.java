@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -33,23 +31,20 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import uy.edu.ucu.eu_goal_news.Model.IListViewType;
 import uy.edu.ucu.eu_goal_news.Model.Match;
 import uy.edu.ucu.eu_goal_news.Model.Soccerseason;
-import uy.edu.ucu.eu_goal_news.Model.Team;
-import uy.edu.ucu.eu_goal_news.db.TeamDAO;
-
 
 public class MainActivity extends ListActivity{
 
-    //public ArrayList<String> leagues;
     private Spinner mSpinner;
-    private ListView mMatchList;
     private String[] mLeagues;
     private HashMap<String,Soccerseason> mLeaguesHash;
     private String selectedLeague;
     private String selectedLeagueTableUrl;
     private Menu mMenu;
-    private TeamDAO mTeamDAO;
+    private MatchesListAdapter mMatchesAdapter;
+    private ArrayList<IListViewType> mItemsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,23 +54,24 @@ public class MainActivity extends ListActivity{
 
         // Populate leagues spinner
         mSpinner = (Spinner)findViewById(R.id.spinner_leagues);
+        mItemsList = new ArrayList<IListViewType>();
+        mLeaguesHash = new HashMap<>();
 
-        /*mTeamDAO = new TeamDAO(this);
-        mTeamDAO.open();
-
-        String name = "prueba nombre 1";
-        String code = "prueba code 2";
-        String shortName = "prueba shortName 3";
-        String squadMarketValue = "prueba squadMarketValue 4";
-        String crestUrl = "prueba crestUrl 5";
-        String fixturesUrl = "prueba fixturesUrl 6";
-        String playersUrl = "prueba playersUrl 7";
-
-        Team team = mTeamDAO.create(name, code, shortName, squadMarketValue, crestUrl, fixturesUrl, playersUrl);
-
-        Team teamFoundByName = mTeamDAO.findByName( name );
-        Team teamFoundByShortName = mTeamDAO.findByShortName( shortName );
-        Team teamFoundByCode = mTeamDAO.findByCode( code );*/
+        ListView matchAdapterView =(ListView) findViewById(android.R.id.list);
+        mMatchesAdapter = new MatchesListAdapter(MainActivity.this, 0, mItemsList);
+        matchAdapterView.setAdapter(mMatchesAdapter);
+        matchAdapterView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(mMatchesAdapter.getItem(position).getViewType() == IListViewType.ITEM) {
+                    Intent intent = new Intent(MainActivity.this, MatchDetailsActivity.class);
+                    Match itemMatch = (Match) mMatchesAdapter.getItem(position);
+                    intent.putExtra("selectedMatchUrl", itemMatch.getSelfUrl());
+                    intent.putExtra("leagueName", mMatchesAdapter.getMatchLeagueName(position));
+                    startActivity(intent);
+                }
+            }
+        });
 
         new GetSeasonsAsyncTask(MainActivity.this).execute();
     }
@@ -126,7 +122,7 @@ public class MainActivity extends ListActivity{
         @Override
         protected ArrayList<Match> doInBackground(String... params) {
 
-            // Parametro para filtrar por liga
+            // Param Filter League
             String league = params[0];
 
             Soccerseason leagueFilter = mLeaguesHash.get(params[0]);
@@ -140,10 +136,11 @@ public class MainActivity extends ListActivity{
             HttpURLConnection connection = null;
 
             // Get current Day
-            //Calendar calendar = Calendar.getInstance();
-            //DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            //String currentDay = dateFormat.format(calendar.getTime());
-            String currentDay = "2015-04-18";
+            Calendar calendar = Calendar.getInstance();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String currentDay = dateFormat.format(calendar.getTime());
+            // TEMP - Code added to get some result
+            currentDay = "2015-04-18";
 
             try {
                 URL url = new URL(String.format(mGetMatchesTodayApiUrl, currentDay, currentDay));
@@ -175,9 +172,12 @@ public class MainActivity extends ListActivity{
                     }
                 });
 
+                mergeLists(matchList);
+
                 if ( league.compareTo( "All leagues" ) == 0 )
                 {
-                    return orderMatchesForFavouriteLeague(matchList);
+                    //return orderMatchesForFavouriteLeague();
+                    orderMatchesForFavouriteLeague();
                 }
 
                 return matchList;
@@ -190,36 +190,56 @@ public class MainActivity extends ListActivity{
             return null;
         }
 
-        public ArrayList orderMatchesForFavouriteLeague( ArrayList matchList )
+        public void mergeLists(ArrayList<Match> matchList){
+            ArrayList<IListViewType> result = new ArrayList<>();
+            for(IListViewType itemLeague : mLeaguesHash.values()){
+                if(itemLeague != null) {
+                    boolean hasMatch = false;
+                    result.add(itemLeague);
+                    for (IListViewType itemMatch : matchList) {
+                        if (itemLeague.getLeagueId() == itemMatch.getLeagueId()) {
+                            hasMatch = true;
+                            result.add(itemMatch);
+                        }
+                    }
+                    // Not show LeagueName if have not matches
+                    if(!hasMatch){ result.remove(itemLeague); }
+                }
+            }
+            mItemsList.clear();
+            mItemsList.addAll(result);
+        }
+
+        public void orderMatchesForFavouriteLeague()
         {
             SharedPreferences sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
             int favouriteLeague = sharedPreferences.getInt( "favourite_league", -1);
 
-            ArrayList matchesFavouriteLeague = new ArrayList<>();
+            ArrayList<IListViewType> itemsFavouriteLeague = new ArrayList<>();
 
             if ( favouriteLeague != -1 )
             {
-                for( int i = 0; i < matchList.size(); i++ )
+                for(IListViewType item : mItemsList)
                 {
-                    Match match = (Match) matchList.get( i );
-                    int matchLeague = match.getMatchLeagueId();
-
+                    int matchLeague = item.getLeagueId();
                     if ( matchLeague == favouriteLeague )
                     {
-                        matchesFavouriteLeague.add( match );
-                        matchList.remove( i );
+                        itemsFavouriteLeague.add( item );
                     }
                 }
 
-                ArrayList finalMatchList = matchesFavouriteLeague;
-                finalMatchList.addAll( matchList );
+                // Remove favs from original List
+                for(IListViewType item : itemsFavouriteLeague){
+                    mItemsList.remove(item);
+                }
 
-                return finalMatchList;
+                ArrayList<IListViewType> noFavsItemsList = new ArrayList<>();
+                noFavsItemsList.addAll(mItemsList);
 
+                mItemsList.clear();
+                mItemsList.addAll(itemsFavouriteLeague);
+                mItemsList.addAll(noFavsItemsList);
             }
-
-            return matchList;
-
         }
 
         @Override
@@ -227,20 +247,7 @@ public class MainActivity extends ListActivity{
 
             // initialize adapter with matches
             if(matches != null) {
-                ListView matchAdapterView =(ListView) findViewById(android.R.id.list);
-                final MatchesListAdapter matchesAdapter = new MatchesListAdapter(mContext, R.layout.match_list_item, matches, mLeaguesHash);
-                matchAdapterView.setAdapter(matchesAdapter);
-                matchAdapterView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(MainActivity.this, MatchDetailsActivity.class);
-                        intent.putExtra("selectedMatchUrl", matchesAdapter.getItem(position).getSelfUrl());
-                        intent.putExtra("leagueName", matchesAdapter.getMatchLeagueName(position));
-                        startActivity(intent);
-                    }
-                });
-
-
+                mMatchesAdapter.setmItems(mItemsList);
             }else{
                 Toast.makeText(mContext, "Error downloading matches", Toast.LENGTH_SHORT).show();
             }
@@ -298,7 +305,7 @@ public class MainActivity extends ListActivity{
                 // Sort by LeagueId
                 Collections.sort(seasonList, new Comparator<Soccerseason>() {
                     public int compare(Soccerseason s1, Soccerseason s2) {
-                        return s1.getLeagueId().compareTo(s1.getLeagueId());
+                        return s1.getIntegerLeagueId().compareTo(s1.getIntegerLeagueId());
                     }
                 });
 
@@ -315,7 +322,7 @@ public class MainActivity extends ListActivity{
         @Override
         public void onPostExecute(ArrayList<Soccerseason> soccerseasons){
 
-            // initialize adapter with matches
+            // initialize adapter with Seasons
             if(soccerseasons != null) {
                 mLeaguesHash = new HashMap<>();
                 mLeagues = new String[soccerseasons.size() + 1];
@@ -335,14 +342,18 @@ public class MainActivity extends ListActivity{
                 mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                        MenuItem item = mMenu.findItem(R.id.action_league_detail);
+
                         if ( mLeagues[position].compareTo( "All leagues" ) != 0 )
                         {
                             selectedLeagueTableUrl = mLeaguesHash.get(mLeagues[position]).getLeagueTable();
-                            mMenu.findItem(R.id.action_league_detail).setEnabled(true);
+                            item.setEnabled(true);
+                            item.getIcon().setAlpha(255);
                         }
                         else
                         {
-                            mMenu.findItem(R.id.action_league_detail).setEnabled(false);
+                            item.setEnabled(false);
+                            item.getIcon().setAlpha(30);
                         }
 
                         selectedLeague = mLeagues[position];

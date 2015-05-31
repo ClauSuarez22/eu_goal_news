@@ -3,7 +3,7 @@
     <string name="loading">Cargando...</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="title_activity_splash_screen">EU Goal News</string>
     <string name="title_activity_league_detail">LeagueDetail</string>
     <string name="title_activity_league_detail_adapter">LeagueDetailAdapter</string>
     <string name="vs_string">vs</string>
