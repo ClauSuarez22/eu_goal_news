@@ -13,17 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import org.json.JSONObject;
-
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -31,6 +28,7 @@ import uy.edu.ucu.eu_goal_news.Model.Match;
 import uy.edu.ucu.eu_goal_news.Model.MatchDetails;
 import uy.edu.ucu.eu_goal_news.Model.Team;
 import uy.edu.ucu.eu_goal_news.Model.TeamLeague;
+import uy.edu.ucu.eu_goal_news.db.TeamDAO;
 
 public class MatchDetailsActivity extends Activity {
     private TextView mMatchday;
@@ -51,10 +49,10 @@ public class MatchDetailsActivity extends Activity {
 
     private ListView mPreviousMatchesView;
     private List<Match> previousMatches;
+    private MatchDetails matchData;
     private Team homeTeam;
     private Team awayTeam;
-    private TeamLeague homeTeamLeague;
-    private TeamLeague awayTeamLeague;
+    private HashMap<String, TeamLeague> mLeagueTableHash;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,9 +162,10 @@ public class MatchDetailsActivity extends Activity {
         }
 
         @Override
-        public void onPostExecute(MatchDetails matchDetails){
+        public void onPostExecute(final MatchDetails matchDetails){
 
             if(matchDetails != null) {
+                matchData = matchDetails;
                 previousMatches = matchDetails.getPreviousMatches();
                 mPreviousMatchesView.setAdapter(new MatchListAdapter());
 
@@ -185,94 +184,55 @@ public class MatchDetailsActivity extends Activity {
                 mH2HDraws.setText("" + matchDetails.getDraws());
 
                 //bring data of each team stored in local DB
-                /*  TeamDAO mTeamDAO = new TeamDAO(this);
-                *   mTeamDAO.open();
-                *   Team homeTeam = mTeamDAO.findByName( matchDetails.getHomeTeamName() );
-                *   Team awayTeam = mTeamDao.findByName( matchDetails.getAwayTeamName() );
-                *   mTeamDao.close();
-                * */
-
-                awayTeam = new Team();
-                homeTeam = new Team();
-                homeTeamLeague = new TeamLeague();
-
-                homeTeam.setName("SpVgg Greuther Fürth");
-                homeTeam.setShortName("F�rth");
-                homeTeam.setCode("GRE");
-                homeTeam.setSquadMarketValue("17,975,000 �");
-                homeTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/de/9/96/Logo_Olympiakos_Piräus.svg");
-                homeTeam.setPlayersUrl("http://api.football-data.org/alpha/teams/21/players");
-
-                homeTeamLeague.setTeamName("SpVgg Greuther Fürth");
-                homeTeamLeague.setPosition(1);
-                homeTeamLeague.setPlayedGames(31);
-                homeTeamLeague.setGoals(40);
-                homeTeamLeague.setGoalsAgainst(40);
-                homeTeamLeague.setGoalDifference(40);
-                homeTeamLeague.setPoints(73);
-
-                awayTeamLeague = new TeamLeague();
-
-                awayTeam.setName("1. FSV Mainz 05");
-                awayTeam.setShortName("Mainz");
-                awayTeam.setCode("M05");
-                awayTeam.setSquadMarketValue("75,200,000 �");
-                awayTeam.setCrestUrl("http://upload.wikimedia.org/wikipedia/de/e/e7/Logo_TSG_Hoffenheim.svg");
-                awayTeam.setPlayersUrl("http://api.football-data.org/alpha/teams/15/players");
-
-                homeTeamLeague.setTeamName("SpVgg Greuther Fürth");
-                homeTeamLeague.setPosition(1);
-                homeTeamLeague.setPlayedGames(31);
-                homeTeamLeague.setGoals(40);
-                homeTeamLeague.setGoalsAgainst(40);
-                homeTeamLeague.setGoalDifference(40);
-                homeTeamLeague.setPoints(73);
-
-                mHomeTeamName.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                TeamDAO mTeamDAO = new TeamDAO(MatchDetailsActivity.this);
+                mTeamDAO.open();
+                homeTeam = mTeamDAO.findByName( matchDetails.getHomeTeamName() );
+                awayTeam = mTeamDAO.findByName( matchDetails.getAwayTeamName() );
+                mTeamDAO.close();
+                /*
+                   Only in case that is the first time the app is executed
+                   and it was not enough time to load all the teams
+                */
+                if(homeTeam != null){
+                    new GetSVGAsyncTask( MatchDetailsActivity.this, mHomeTeamImg )
+                            .execute(homeTeam.getCrestUrl());
+                    mHomeTeamName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                         Intent intent = new Intent(MatchDetailsActivity.this, TeamDetailsActivity.class);
                         intent.putExtra("teamName", homeTeam.getName());
                         intent.putExtra("squadMarketValue", homeTeam.getSquadMarketValue());
                         intent.putExtra("playersUrl", homeTeam.getPlayersUrl());
                         intent.putExtra("crestUrl", homeTeam.getCrestUrl());
-                        intent.putExtra("position", homeTeamLeague.getPosition());
-                        intent.putExtra("playedGames", homeTeamLeague.getPlayedGames());
-                        intent.putExtra("points", homeTeamLeague.getPoints());
-                        intent.putExtra("goals", homeTeamLeague.getGoals());
-                        intent.putExtra("goalsAgainst", homeTeamLeague.getGoalsAgainst());
-                        intent.putExtra("goalsDifference", homeTeamLeague.getGoalDifference());
+                        intent.putExtra("teamLeagueUrl", matchData.getSoccerseasonUrl() + "/leagueTable");
                         startActivity(intent);
-
-                    }
-                });
-
-                mAwayTeamName.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                        }
+                    });
+                }else {
+                    new LoadTeamToDBAsyncTask( MatchDetailsActivity.this, "home" )
+                            .execute(matchDetails.getHomeTeamUrl());
+                }
+                if(awayTeam != null){
+                    new GetSVGAsyncTask( MatchDetailsActivity.this, mAwayTeamImg )
+                            .execute(awayTeam.getCrestUrl());
+                    mAwayTeamName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                         Intent intent = new Intent(MatchDetailsActivity.this, TeamDetailsActivity.class);
                         intent.putExtra("teamName",awayTeam.getName());
                         intent.putExtra("squadMarketValue", awayTeam.getSquadMarketValue());
                         intent.putExtra("playersUrl", awayTeam.getPlayersUrl());
                         intent.putExtra("crestUrl", awayTeam.getCrestUrl());
-                        intent.putExtra("position", awayTeamLeague.getPosition());
-                        intent.putExtra("playedGames", awayTeamLeague.getPlayedGames());
-                        intent.putExtra("points", awayTeamLeague.getPoints());
-                        intent.putExtra("goals", awayTeamLeague.getGoals());
-                        intent.putExtra("goalsAgainst", awayTeamLeague.getGoalsAgainst());
-                        intent.putExtra("goalsDifference", awayTeamLeague.getGoalDifference() );
+                        intent.putExtra("teamLeagueUrl", matchData.getSoccerseasonUrl() + "/leagueTable");
                         startActivity(intent);
+                        }
+                    });
+                }else {
+                    new LoadTeamToDBAsyncTask( MatchDetailsActivity.this, "away" )
+                            .execute(matchDetails.getAwayTeamUrl());
+                }
+            }
 
-                    }
-                });
-                new GetSVGAsyncTask( MatchDetailsActivity.this, mHomeTeamImg )
-                        .execute(homeTeam.getCrestUrl());
-                new GetSVGAsyncTask( MatchDetailsActivity.this, mAwayTeamImg )
-                        .execute(awayTeam.getCrestUrl());
-            }
-            else{
-                Toast.makeText(mContext, "Error loading teams details", Toast.LENGTH_SHORT).show();
-            }
 
             if(mProgressDialog.isShowing()){
                 mProgressDialog.dismiss();
@@ -281,6 +241,93 @@ public class MatchDetailsActivity extends Activity {
         }
     }
 
+    private class LoadTeamToDBAsyncTask extends AsyncTask<String, Integer, Team> {
+        private Context mContext;
+        private String typeTeam;
+        public LoadTeamToDBAsyncTask(Context context, String team){
+            mContext = context;
+            typeTeam = team;
+        }
+
+        @Override
+        protected Team doInBackground(String... params) {
+            HttpURLConnection connection = null;
+            try{
+                URL url = new URL(params[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("X-Auth-Token","7641996b673943d0a712f2f4493c7bbd");
+                connection.setConnectTimeout(3000);
+                connection.connect();
+
+                Scanner scanner = new Scanner(connection.getInputStream());
+                StringBuilder sb = new StringBuilder();
+                while (scanner.hasNextLine()){
+                    sb.append(scanner.nextLine());
+                }
+                Team team = null;
+
+                String response = sb.toString();
+                JSONObject item = new JSONObject(response);
+                if(item != null){
+                    TeamDAO mTeamDAO = new TeamDAO(MatchDetailsActivity.this);
+                    mTeamDAO.open();
+                    team = mTeamDAO.createTeam(item);
+                    mTeamDAO.close();
+                }
+                return team;
+
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }finally {
+                if(connection != null) connection.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        public void onPostExecute(Team team){
+            if(team != null){
+                if(typeTeam.equals("home")){
+                    homeTeam = team;
+                    new GetSVGAsyncTask( MatchDetailsActivity.this, mHomeTeamImg )
+                            .execute(homeTeam.getCrestUrl());
+                    mHomeTeamName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        Intent intent = new Intent(MatchDetailsActivity.this, TeamDetailsActivity.class);
+                        intent.putExtra("teamName", homeTeam.getName());
+                        intent.putExtra("squadMarketValue", homeTeam.getSquadMarketValue());
+                        intent.putExtra("playersUrl", homeTeam.getPlayersUrl());
+                        intent.putExtra("crestUrl", homeTeam.getCrestUrl());
+                        intent.putExtra("teamLeagueUrl", matchData.getSoccerseasonUrl() + "/leagueTable");
+                        startActivity(intent);
+                        }
+                    });
+                }else{
+                    awayTeam = team;
+                    new GetSVGAsyncTask( MatchDetailsActivity.this, mAwayTeamImg )
+                            .execute(awayTeam.getCrestUrl());
+                    mAwayTeamName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(MatchDetailsActivity.this, TeamDetailsActivity.class);
+                            intent.putExtra("teamName", awayTeam.getName());
+                            intent.putExtra("squadMarketValue", awayTeam.getSquadMarketValue());
+                            intent.putExtra("playersUrl", awayTeam.getPlayersUrl());
+                            intent.putExtra("crestUrl", awayTeam.getCrestUrl());
+                            intent.putExtra("teamLeagueUrl", matchData.getSoccerseasonUrl() + "/leagueTable");
+                            startActivity(intent);
+                        }
+                    });
+
+                }
+                Log.d(MainActivity.class.getSimpleName(), "team correctly loaded into database.");
+            }else{
+                Log.d(MainActivity.class.getSimpleName(), "error loading team");
+            }
+        }
+
+    }
 
     private class MatchListAdapter extends BaseAdapter {
 

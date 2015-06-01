@@ -6,19 +6,20 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import uy.edu.ucu.eu_goal_news.Model.Team;
+import uy.edu.ucu.eu_goal_news.Model.TeamLeague;
 
 /**
  * Datasource class
  */
 public class TeamDAO {
-
     private TeamHelper dbHelper;
     private SQLiteDatabase database;
-
     /**
      * Gets a read/write SQLiteDatabase instance
      */
@@ -42,39 +43,37 @@ public class TeamDAO {
         open();
     }
 
-    /**
-     * Inserts a new todo in the todos database table
-     * @param name
-     * @param code
-     * @param shortName
-     * @param squadMarketValue
-     * @param crestUrl
-     * @param fixturesUrl
-     * @param playersUrl
-     * @return created todo object
-     */
-    public Team create(String name, String code, String shortName, String squadMarketValue,
-                       String crestUrl, String fixturesUrl, String playersUrl){
+    public Team createTeam(JSONObject teamJSONObject ){
+        try{
+            ContentValues values = new ContentValues(1);
 
-        ContentValues values = new ContentValues(1);
-        values.put(TeamHelper.COLUMN_NAME, name);
-        values.put(TeamHelper.COLUMN_CODE, code);
-        values.put(TeamHelper.COLUMN_SHORTNAME, shortName);
-        values.put(TeamHelper.COLUMN_SQUAD_MARKET_VALUE, squadMarketValue);
-        values.put(TeamHelper.COLUMN_CREST_URL, crestUrl);
-        values.put(TeamHelper.COLUMN_FIXTURE_URL, fixturesUrl);
-        values.put(TeamHelper.COLUMN_PLAYERS_URL, playersUrl);
+            JSONObject link = teamJSONObject.getJSONObject("_links");
+            values.put(TeamHelper.COLUMN_NAME, teamJSONObject.getString("name"));
+            values.put(TeamHelper.COLUMN_CODE, teamJSONObject.getString("code"));
+            values.put(TeamHelper.COLUMN_SHORTNAME, teamJSONObject.getString("shortName"));
+            values.put(TeamHelper.COLUMN_SQUAD_MARKET_VALUE, teamJSONObject.getString("squadMarketValue"));
+            values.put(TeamHelper.COLUMN_CREST_URL, teamJSONObject.getString("crestUrl"));
+            values.put(TeamHelper.COLUMN_FIXTURE_URL, link.getJSONObject("fixtures").getString("href"));
+            values.put(TeamHelper.COLUMN_PLAYERS_URL, link.getJSONObject("players").getString("href"));
+            if(findByName(teamJSONObject.getString("name")) == null){
+                long newRowId = database.insert(TeamHelper.TABLE_TEAM, null, values);
+                return findByName(teamJSONObject.getString("name"));
+            }
+            return null;
 
-        long newRowId = database.insert(TeamHelper.TABLE_NAME, null, values);
-        return findByCode( code );
+        }catch(Exception e ){
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
     /**
      * Updates a todo in the database with the values received in the todo object
      * @param team
      * @return updated rows count
      */
-    public int update(Team team){
+    public int updateTeam(Team team){
 
         ContentValues values = new ContentValues();
         values.put(TeamHelper.COLUMN_NAME, team.getName());
@@ -85,9 +84,9 @@ public class TeamDAO {
         values.put(TeamHelper.COLUMN_FIXTURE_URL, team.getFixturesUrl());
         values.put(TeamHelper.COLUMN_PLAYERS_URL, team.getPlayersUrl());
 
-        String selection = TeamHelper.COLUMN_CODE + " = ?";
-        String[] selectionArgs = {String.valueOf(team.getCode())};
-        return database.update(TeamHelper.TABLE_NAME, values, selection, selectionArgs);
+        String selection = TeamHelper.COLUMN_NAME + " = ?";
+        String[] selectionArgs = { team.getName()};
+        return database.update(TeamHelper.TABLE_TEAM, values, selection, selectionArgs);
     }
 
     /**
@@ -95,10 +94,10 @@ public class TeamDAO {
      * @param todo
      * @return deleted rows count
      */
-    public int delete(Team todo){
-        String selection = TeamHelper.COLUMN_CODE + " = ?";
-        String[] selectionArgs = {String.valueOf(todo.getCode())};
-        return database.delete(TeamHelper.TABLE_NAME, selection, selectionArgs);
+    public int delete(Team todo ){
+        String selection = TeamHelper.COLUMN_NAME + " = ?";
+        String[] selectionArgs = { todo.getName() };
+        return database.delete(TeamHelper.TABLE_TEAM, selection, selectionArgs);
     }
 
     /**
@@ -113,7 +112,7 @@ public class TeamDAO {
         // you should always try to use methods interface, query(), insert() ..
 
         List<Team> todos = new ArrayList<>();
-        Cursor cursor = database.query(TeamHelper.TABLE_NAME, TeamHelper.ALL_COLUMNS, null, null, null, null, null);
+        Cursor cursor = database.query(TeamHelper.TABLE_TEAM, TeamHelper.ALL_COLUMNS_TEAM_TABLE, null, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -132,50 +131,8 @@ public class TeamDAO {
     public Team findByName(String name){
 
         String selection = TeamHelper.COLUMN_NAME + " = ?";
-        String[] selectionArgs = {name};
-        Cursor cursor = database.query(TeamHelper.TABLE_NAME, TeamHelper.ALL_COLUMNS, selection, selectionArgs, null, null, null);
-
-        cursor.moveToFirst();
-        Team todo = null;
-        if (!cursor.isAfterLast()) {
-            todo = cursorToTeam(cursor);
-        }
-
-        cursor.close();
-        return todo;
-    }
-
-    /**
-     * Finds a Team by it's id
-     * @param shortName
-     * @return todo object
-     */
-    public Team findByShortName(String shortName){
-
-        String selection = TeamHelper.COLUMN_SHORTNAME + " = ?";
-        String[] selectionArgs = {shortName};
-        Cursor cursor = database.query(TeamHelper.TABLE_NAME, TeamHelper.ALL_COLUMNS, selection, selectionArgs, null, null, null);
-
-        cursor.moveToFirst();
-        Team todo = null;
-        if (!cursor.isAfterLast()) {
-            todo = cursorToTeam(cursor);
-        }
-
-        cursor.close();
-        return todo;
-    }
-
-    /**
-     * Finds a Team by it's id
-     * @param code
-     * @return todo object
-     */
-    public Team findByCode(String code){
-
-        String selection = TeamHelper.COLUMN_CODE + " = ?";
-        String[] selectionArgs = {code};
-        Cursor cursor = database.query(TeamHelper.TABLE_NAME, TeamHelper.ALL_COLUMNS, selection, selectionArgs, null, null, null);
+        String[] selectionArgs = { name };
+        Cursor cursor = database.query(TeamHelper.TABLE_TEAM, TeamHelper.ALL_COLUMNS_TEAM_TABLE, selection, selectionArgs, null, null, null);
 
         cursor.moveToFirst();
         Team todo = null;
@@ -193,13 +150,12 @@ public class TeamDAO {
      * @return todo object
      */
     private Team cursorToTeam(Cursor cursor) {
-
         Team todo = new Team();
         todo.setName(cursor.getString(cursor.getColumnIndex(TeamHelper.COLUMN_NAME)));
         todo.setCode(cursor.getString(cursor.getColumnIndex(TeamHelper.COLUMN_CODE)));
-        todo.setCrestUrl(cursor.getString(cursor.getColumnIndex(TeamHelper.COLUMN_CREST_URL)));
         todo.setShortName(cursor.getString(cursor.getColumnIndex(TeamHelper.COLUMN_SHORTNAME)));
         todo.setSquadMarketValue(cursor.getString(cursor.getColumnIndex(TeamHelper.COLUMN_SQUAD_MARKET_VALUE)));
+        todo.setCrestUrl(cursor.getString(cursor.getColumnIndex(TeamHelper.COLUMN_CREST_URL)));
         todo.setFixturesUrl(cursor.getString(cursor.getColumnIndex(TeamHelper.COLUMN_FIXTURE_URL)));
         todo.setPlayersUrl(cursor.getString(cursor.getColumnIndex(TeamHelper.COLUMN_PLAYERS_URL)));
         return todo;

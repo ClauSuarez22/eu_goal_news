@@ -8,7 +8,7 @@
     <dimen name="letterSize">12dp</dimen>
     <dimen name="match_details_header_height">60dp</dimen>
     <dimen name="match_details_content_center">50dp</dimen>
-    <dimen name="match_details_h2h_height">100dp</dimen>
+    <dimen name="match_details_h2h_height">60dp</dimen>
     <dimen name="match_details_team_name">100dp</dimen>
     <dimen name="match_details_h2h_team_name">150dp</dimen>
     <dimen name="team_logo_height">250dp</dimen>

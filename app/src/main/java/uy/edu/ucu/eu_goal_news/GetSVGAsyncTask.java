@@ -42,6 +42,8 @@ public class GetSVGAsyncTask extends AsyncTask<String, Void, Drawable> {
             String logoQuery = urlString.substring(endIndex + 1);
             String url = urlString.substring(0, endIndex + 1);
             connection = (HttpURLConnection) new URL(url + URLEncoder.encode(logoQuery, "UTF-8")).openConnection();
+            System.out.println("Cargando logo..");
+            System.out.println(url + URLEncoder.encode(logoQuery, "UTF-8"));
             SVG svgLogo = SVGParser.getSVGFromInputStream(connection.getInputStream());
             drawable = svgLogo.createPictureDrawable();
 

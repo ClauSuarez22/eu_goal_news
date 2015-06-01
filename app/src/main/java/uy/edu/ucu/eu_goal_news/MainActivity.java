@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,7 @@ import java.util.Scanner;
 import uy.edu.ucu.eu_goal_news.Model.IListViewType;
 import uy.edu.ucu.eu_goal_news.Model.Match;
 import uy.edu.ucu.eu_goal_news.Model.Soccerseason;
+import uy.edu.ucu.eu_goal_news.db.TeamDAO;
 
 public class MainActivity extends ListActivity{
 
@@ -264,22 +266,22 @@ public class MainActivity extends ListActivity{
         private final String mGetSeasonApiUrl = "http://api.football-data.org/alpha/soccerseasons";
         private Context mContext;
         private ProgressDialog mProgressDialog;
+        private boolean loadTeamsToDb;
 
         public GetSeasonsAsyncTask(Context context){
             this.mContext = context;
+            SharedPreferences sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
+            loadTeamsToDb = sharedPreferences.getBoolean("first_time_load", true);
         }
 
         @Override
         protected void onPreExecute(){
-
-            mProgressDialog = ProgressDialog.show(mContext, null,mContext.getString(R.string.loading), true, false);
+            mProgressDialog = ProgressDialog.show(mContext, null, mContext.getString(R.string.loading), true, false);
         }
 
         @Override
         protected ArrayList<Soccerseason> doInBackground(String... params) {
-
             HttpURLConnection connection = null;
-
             try {
                 URL url = new URL(mGetSeasonApiUrl);
 
@@ -295,13 +297,16 @@ public class MainActivity extends ListActivity{
                 }
 
                 JSONArray jsonArray = new JSONArray(sb.toString());
-
                 ArrayList<Soccerseason> seasonList = new ArrayList<Soccerseason>();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject item = jsonArray.getJSONObject(i);
                     seasonList.add(new Soccerseason(item));
+                    if(loadTeamsToDb){
+                        String seasonUrl = item.getJSONObject("_links").getJSONObject("teams").getString("href");
+                        new LoadTeamsToDBAsyncTask( MainActivity.this )
+                                .execute(seasonUrl);
+                    }
                 }
-
                 // Sort by LeagueId
                 Collections.sort(seasonList, new Comparator<Soccerseason>() {
                     public int compare(Soccerseason s1, Soccerseason s2) {
@@ -324,6 +329,10 @@ public class MainActivity extends ListActivity{
 
             // initialize adapter with Seasons
             if(soccerseasons != null) {
+                if(loadTeamsToDb){
+                    SharedPreferences sharedPreferences = getSharedPreferences("SHARED_PREFS", MODE_PRIVATE);
+                    sharedPreferences.edit().putBoolean("first_time_load", false).commit();
+                }
                 mLeaguesHash = new HashMap<>();
                 mLeagues = new String[soccerseasons.size() + 1];
                 mLeagues[0] = "All leagues";
@@ -344,14 +353,11 @@ public class MainActivity extends ListActivity{
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                         MenuItem item = mMenu.findItem(R.id.action_league_detail);
 
-                        if ( mLeagues[position].compareTo( "All leagues" ) != 0 )
-                        {
+                        if (mLeagues[position].compareTo("All leagues") != 0) {
                             selectedLeagueTableUrl = mLeaguesHash.get(mLeagues[position]).getLeagueTable();
                             item.setEnabled(true);
                             item.getIcon().setAlpha(255);
-                        }
-                        else
-                        {
+                        } else {
                             item.setEnabled(false);
                             item.getIcon().setAlpha(30);
                         }
@@ -375,4 +381,57 @@ public class MainActivity extends ListActivity{
         }
 
     }
+
+    private class LoadTeamsToDBAsyncTask extends AsyncTask<String, Integer, Boolean> {
+        private Context mContext;
+        public LoadTeamsToDBAsyncTask(Context context){ mContext = context; }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            HttpURLConnection connection = null;
+            try{
+                URL url = new URL(params[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("X-Auth-Token","7641996b673943d0a712f2f4493c7bbd");
+                connection.setConnectTimeout(3000);
+                connection.connect();
+
+                Scanner scanner = new Scanner(connection.getInputStream());
+                StringBuilder sb = new StringBuilder();
+                while (scanner.hasNextLine()){
+                    sb.append(scanner.nextLine());
+                }
+
+                String response = sb.toString();
+                JSONArray jsonArray = new JSONObject(response).getJSONArray("teams");
+                if(jsonArray != null){
+                    TeamDAO mTeamDAO = new TeamDAO(MainActivity.this);
+                    mTeamDAO.open();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject item = jsonArray.getJSONObject(i);
+                        mTeamDAO.createTeam(item);
+                    }
+                    mTeamDAO.close();
+                    return true;
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }finally {
+                if(connection != null) connection.disconnect();
+            }
+            return false;
+        }
+
+        @Override
+        public void onPostExecute(Boolean result){
+            if(result.booleanValue()){
+                Log.d(MainActivity.class.getSimpleName(), "teams of soccerseason correctly loaded into database.");
+            }else{
+                Log.d(MainActivity.class.getSimpleName(), "error loading teams");
+            }
+        }
+
+    }
+
 }

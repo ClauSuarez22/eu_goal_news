@@ -27,6 +27,25 @@ public class MatchDetails {
     private int awayTeamGoals;
     private String homeTeamUrl;
     private String awayTeamUrl;
+    private String selfUrl;
+
+    public String getSelfUrl() {
+        return selfUrl;
+    }
+
+    public void setSelfUrl(String selfUrl) {
+        this.selfUrl = selfUrl;
+    }
+
+    public String getSoccerseasonUrl() {
+        return soccerseasonUrl;
+    }
+
+    public void setSoccerseasonUrl(String soccerseasonUrl) {
+        this.soccerseasonUrl = soccerseasonUrl;
+    }
+
+    private String soccerseasonUrl;
     private Team homeTeam;
     private Team awayTeam;
     private int homeTeamWins;
@@ -59,6 +78,8 @@ public class MatchDetails {
         this.awayTeamGoals = result.getInt("goalsAwayTeam");
         this.homeTeamUrl = links.getJSONObject("homeTeam").getString("href");
         this.awayTeamUrl = links.getJSONObject("awayTeam").getString("href");
+        this.selfUrl = links.getJSONObject("self").getString("href");
+        this.soccerseasonUrl = links.getJSONObject("soccerseason").getString("href");
 
         this.homeTeamWins = head2head.getInt("homeTeamWins");
         this.awayTeamWins = head2head.getInt("awayTeamWins");
