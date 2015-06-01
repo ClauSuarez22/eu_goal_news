@@ -16,7 +16,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -31,6 +34,8 @@ import uy.edu.ucu.eu_goal_news.Model.TeamLeague;
 import uy.edu.ucu.eu_goal_news.db.TeamDAO;
 
 public class MatchDetailsActivity extends Activity {
+    private static final String URL_TO_SHARE = "http://www.eu_goal_news.apk";
+    private ShareActionProvider mShareActionProvider;
     private TextView mMatchday;
     private TextView mMatchStatus;
     private TextView mMatchDate;
@@ -94,6 +99,8 @@ public class MatchDetailsActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_match_details, menu);
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         return true;
     }
 
@@ -163,31 +170,43 @@ public class MatchDetailsActivity extends Activity {
 
         @Override
         public void onPostExecute(final MatchDetails matchDetails){
-
             if(matchDetails != null) {
                 matchData = matchDetails;
-                previousMatches = matchDetails.getPreviousMatches();
+                //allow sharing via social network
+                String message =  matchData.getStartDate() + "\n"
+                        + matchData.getStartTime() + "\n"
+                        +  matchData.getHomeTeamName() + "\tvs\t" + matchData.getAwayTeamName() + "\n"
+                        +  matchData.getHomeTeamGoals() + "\t-\t" + matchData.getAwayTeamGoals() + "\n"
+                        +  matchData.getStatus() + "\n"
+                        +  URL_TO_SHARE;
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+                mShareActionProvider.setShareIntent(shareIntent);
+
+                previousMatches = matchData.getPreviousMatches();
                 mPreviousMatchesView.setAdapter(new MatchListAdapter());
 
-                mMatchday.setText("" + matchDetails.getMatchday());
-                mMatchStatus.setText("" + matchDetails.getStatus());
-                mMatchDate.setText(matchDetails.getStartDate());
-                mMatchTime.setText(matchDetails.getStartTime());
-                mHomeTeamName.setText(matchDetails.getHomeTeamName());
-                mAwayTeamName.setText(matchDetails.getAwayTeamName());
-                mH2HHomeTeamName.setText(matchDetails.getHomeTeamName());
-                mH2HAwayTeamName.setText(matchDetails.getAwayTeamName());
-                mHomeTeamGoals.setText("" + matchDetails.getHomeTeamGoals());
-                mAwayTeamGoals.setText("" + matchDetails.getAwayTeamGoals());
-                mHomeTeamWins.setText("" + matchDetails.getHomeTeamWins());
-                mAwayTeamWins.setText("" + matchDetails.getAwayTeamWins());
-                mH2HDraws.setText("" + matchDetails.getDraws());
+                mMatchday.setText("" + matchData.getMatchday());
+                mMatchStatus.setText("" + matchData.getStatus());
+                mMatchDate.setText(matchData.getStartDate());
+                mMatchTime.setText(matchData.getStartTime());
+                mHomeTeamName.setText(matchData.getHomeTeamName());
+                mAwayTeamName.setText(matchData.getAwayTeamName());
+                mH2HHomeTeamName.setText(matchData.getHomeTeamName());
+                mH2HAwayTeamName.setText(matchData.getAwayTeamName());
+                mHomeTeamGoals.setText("" + matchData.getHomeTeamGoals());
+                mAwayTeamGoals.setText("" + matchData.getAwayTeamGoals());
+                mHomeTeamWins.setText("" + matchData.getHomeTeamWins());
+                mAwayTeamWins.setText("" + matchData.getAwayTeamWins());
+                mH2HDraws.setText("" + matchData.getDraws());
 
                 //bring data of each team stored in local DB
                 TeamDAO mTeamDAO = new TeamDAO(MatchDetailsActivity.this);
                 mTeamDAO.open();
-                homeTeam = mTeamDAO.findByName( matchDetails.getHomeTeamName() );
-                awayTeam = mTeamDAO.findByName( matchDetails.getAwayTeamName() );
+                homeTeam = mTeamDAO.findByName( matchData.getHomeTeamName() );
+                awayTeam = mTeamDAO.findByName( matchData.getAwayTeamName() );
                 mTeamDAO.close();
                 /*
                    Only in case that is the first time the app is executed
@@ -210,7 +229,7 @@ public class MatchDetailsActivity extends Activity {
                     });
                 }else {
                     new LoadTeamToDBAsyncTask( MatchDetailsActivity.this, "home" )
-                            .execute(matchDetails.getHomeTeamUrl());
+                            .execute(matchData.getHomeTeamUrl());
                 }
                 if(awayTeam != null){
                     new GetSVGAsyncTask( MatchDetailsActivity.this, mAwayTeamImg )

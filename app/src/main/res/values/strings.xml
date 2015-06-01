@@ -9,4 +9,5 @@
     <string name="vs_string">vs</string>
     <string name="title_activity_match_details">MatchDetailsActivity</string>
     <string name="title_activity_team_details">TeamDetailsActivity</string>
+    <string name="action_share">Share</string>
 </resources>

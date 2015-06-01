@@ -1,4 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="uy.edu.ucu.eu_goal_news.MatchDetailsActivity">
+
+        <item android:id="@+id/menu_item_share"
+            android:orderInCategory="100"
+            android:showAsAction="ifRoom"
+            android:title="@string/action_share"
+            android:actionProviderClass="android.widget.ShareActionProvider"
+            />
+
 </menu>
