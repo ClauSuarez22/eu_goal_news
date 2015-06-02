@@ -6,29 +6,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import uy.edu.ucu.eu_goal_news.Model.IListViewType;
+import uy.edu.ucu.eu_goal_news.Model.Match;
 import uy.edu.ucu.eu_goal_news.Model.TeamLeague;
 
 
-public class LeagueDetailAdapter extends ArrayAdapter<TeamLeague> {
+public class LeagueDetailAdapter extends ArrayAdapter<TeamLeague> implements Filterable {
     /**
      * Adapter that turns forecasts into Views that will be displayed in a ListView
      */
     private static final String TAG = LeagueDetailAdapter.class.getSimpleName();
     private final Context mContext;
     private final List<TeamLeague> mTeamLeague;
+    private final List<TeamLeague> mFilteredTeamLeague;
+    private ItemFilter mFilter = new ItemFilter();
 
     public LeagueDetailAdapter(Context context, int resource, List<TeamLeague> teamLeague) {
         super(context, resource, teamLeague);
-
         this.mContext = context;
-        this.mTeamLeague = teamLeague;
+        this.mTeamLeague = new ArrayList<>();
+        this.mTeamLeague.addAll(teamLeague);
+        this.mFilteredTeamLeague = new ArrayList<>();
+        this.mFilteredTeamLeague.addAll(teamLeague);
     }
 
     @Override
@@ -38,13 +47,12 @@ public class LeagueDetailAdapter extends ArrayAdapter<TeamLeague> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.team_league_list_item, parent, false);
 
-        if (pos < 4 )
-        {
-            rowView.setBackgroundColor( Color.parseColor("#E1F5A9") );
-        }
-        else if ( pos + 3 >= this.mTeamLeague.size())
-        {
-            rowView.setBackgroundColor( Color.parseColor("#F6CECE") );
+        if (mFilteredTeamLeague.size() > 7) {
+            if (pos < 4) {
+                rowView.setBackgroundColor(Color.parseColor("#E1F5A9"));
+            } else if (pos + 3 >= this.mFilteredTeamLeague.size()) {
+                rowView.setBackgroundColor(Color.parseColor("#F6CECE"));
+            }
         }
 
         TextView teamNameView = (TextView) rowView.findViewById(R.id.team_name);
@@ -55,15 +63,65 @@ public class LeagueDetailAdapter extends ArrayAdapter<TeamLeague> {
         TextView goalsAgainst = (TextView) rowView.findViewById(R.id.goalsAgainst);
         TextView goalDifference = (TextView) rowView.findViewById(R.id.goalDifference);
 
-        teamNameView.setText(this.mTeamLeague.get(pos).getTeamName());
-        position.setText(this.mTeamLeague.get(pos).getPosition().toString());
-        playedGames.setText(this.mTeamLeague.get(pos).getPlayedGames().toString());
-        points.setText(this.mTeamLeague.get(pos).getPoints().toString());
-        goals.setText(this.mTeamLeague.get(pos).getGoals().toString());
-        goalsAgainst.setText(this.mTeamLeague.get(pos).getGoalsAgainst().toString());
-        goalDifference.setText(this.mTeamLeague.get(pos).getGoalDifference().toString());
+        teamNameView.setText(this.mFilteredTeamLeague.get(pos).getTeamName());
+        position.setText(this.mFilteredTeamLeague.get(pos).getPosition().toString());
+        playedGames.setText(this.mFilteredTeamLeague.get(pos).getPlayedGames().toString());
+        points.setText(this.mFilteredTeamLeague.get(pos).getPoints().toString());
+        goals.setText(this.mFilteredTeamLeague.get(pos).getGoals().toString());
+        goalsAgainst.setText(this.mFilteredTeamLeague.get(pos).getGoalsAgainst().toString());
+        goalDifference.setText(this.mFilteredTeamLeague.get(pos).getGoalDifference().toString());
 
         return rowView;
+    }
+
+    @Override
+    public int getCount() {
+        return mFilteredTeamLeague.size();
+    }
+
+    @Override
+    public TeamLeague getItem(int position) {
+        return mFilteredTeamLeague.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+
+    private class ItemFilter extends Filter {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mFilteredTeamLeague.clear();
+            mFilteredTeamLeague.addAll((List<TeamLeague>) results.values);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            FilterResults results = new FilterResults();
+            ArrayList<TeamLeague> filteredArrayNames = new ArrayList<>();
+
+            constraint = constraint.toString().toLowerCase();
+            for (TeamLeague item : mTeamLeague) {
+                if (item.getTeamName().toLowerCase().startsWith(constraint.toString())) {
+                    filteredArrayNames.add(item);
+                }
+            }
+
+            results.count = filteredArrayNames.size();
+            results.values = filteredArrayNames;
+            return results;
+        }
     }
 
 }

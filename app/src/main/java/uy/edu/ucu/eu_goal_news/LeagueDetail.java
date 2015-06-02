@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Scanner;
 
+import uy.edu.ucu.eu_goal_news.Model.IListViewType;
 import uy.edu.ucu.eu_goal_news.Model.Match;
 import uy.edu.ucu.eu_goal_news.Model.TeamLeague;
 
@@ -35,6 +39,7 @@ public class LeagueDetail extends ListActivity {
 
     String leagueName;
     int leagueId;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,8 @@ public class LeagueDetail extends ListActivity {
             new GetLeagueAsyncTask( LeagueDetail.this )
                     .execute( selectedLeagueUrl );
         }
+
+        mListView =(ListView) findViewById(android.R.id.list);
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -119,6 +126,37 @@ public class LeagueDetail extends ListActivity {
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem item = menu.findItem(R.id.action_search_league);
+        SearchView searchView = new SearchView(LeagueDetail.this);
+        // to change searchview text color
+//        EditText searchEditText = (EditText) searchView.findViewById(R.id.search_src_text);
+//        searchEditText.setTextColor(getResources().getColor(R.color.white));
+//        searchEditText.setHintTextColor(getResources().getColor(R.color.white));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // called when the user submits the query introduced in the searchview
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // called when user changes the query in the search view
+                ((ArrayAdapter<TeamLeague>) mListView.getAdapter()).getFilter().filter(newText);
+                return true;
+            }
+        });
+
+        item.setActionView(searchView);
+
+        return true;
+
+    }
+
     // Async Task for Team Leagues
     private class GetLeagueAsyncTask extends AsyncTask<String, Integer, ArrayList<TeamLeague>> {
 
@@ -177,7 +215,8 @@ public class LeagueDetail extends ListActivity {
 
             // initialize adapter with teams leagues
             if(leagues != null) {
-                setListAdapter(new LeagueDetailAdapter(mContext, R.layout.activity_league_detail, leagues));
+                //setListAdapter(new LeagueDetailAdapter(mContext, R.layout.activity_league_detail, leagues));
+                mListView.setAdapter(new LeagueDetailAdapter(mContext, R.layout.activity_league_detail, leagues));
             }else{
                 Toast.makeText(mContext, "Error downloading teams details", Toast.LENGTH_SHORT).show();
             }

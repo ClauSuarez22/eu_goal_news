@@ -1,10 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="uy.edu.ucu.eu_goal_news.LeagueDetail">
+
+    <item android:id="@+id/action_search_league"
+        android:title="Search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:showAsAction="collapseActionView|ifRoom"
+        android:actionViewClass="android.widget.SearchView" />
+
     <item
         android:id="@+id/action_add_favourite"
         android:orderInCategory="100"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_favorite"
         android:title="Add to favourite"/>
 </menu>

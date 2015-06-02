@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Filter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,11 +20,13 @@ import uy.edu.ucu.eu_goal_news.Model.IListViewType;
 import uy.edu.ucu.eu_goal_news.Model.Match;
 import uy.edu.ucu.eu_goal_news.Model.Soccerseason;
 
-public class MatchesListAdapter extends ArrayAdapter<IListViewType>  {
+public class MatchesListAdapter extends ArrayAdapter<IListViewType> implements Filterable {
 
     private final Context mContext;
 
     private List<IListViewType> mItems;
+    private List<IListViewType> mItemsFiltered;
+    private ItemFilter mFilter = new ItemFilter();
 
     public MatchesListAdapter(Context context, int resource, List<IListViewType> items) {
         super(context, resource, items);
@@ -30,6 +34,9 @@ public class MatchesListAdapter extends ArrayAdapter<IListViewType>  {
         this.mContext = context;
         this.mItems = new ArrayList<>();
         this.mItems.addAll(items);
+
+        this.mItemsFiltered = new ArrayList<>();
+        this.mItemsFiltered.addAll(items);
     }
 
     @Override
@@ -39,7 +46,7 @@ public class MatchesListAdapter extends ArrayAdapter<IListViewType>  {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View rowView;
-        int viewType = mItems.get(position).getViewType();
+        int viewType = mItemsFiltered.get(position).getViewType();
 
         if(viewType == IListViewType.SECTION){
             rowView = inflater.inflate(R.layout.match_list_section, parent, false);
@@ -49,7 +56,7 @@ public class MatchesListAdapter extends ArrayAdapter<IListViewType>  {
 
         if (viewType == IListViewType.ITEM) {
 
-            Match match = (Match)mItems.get(position);
+            Match match = (Match)mItemsFiltered.get(position);
 
             LinearLayout matchItem = (LinearLayout)rowView.findViewById(R.id.layout_match_item);
 
@@ -70,7 +77,7 @@ public class MatchesListAdapter extends ArrayAdapter<IListViewType>  {
 
         }else{
 
-            Soccerseason season = (Soccerseason)mItems.get(position);
+            Soccerseason season = (Soccerseason)mItemsFiltered.get(position);
             TextView sectionNameTextView = (TextView)rowView.findViewById(R.id.section_name);
             sectionNameTextView.setText(season.getCaption());
         }
@@ -80,12 +87,12 @@ public class MatchesListAdapter extends ArrayAdapter<IListViewType>  {
 
     @Override
     public int getCount() {
-        return mItems.size();
+        return mItemsFiltered.size();
     }
 
     @Override
     public IListViewType getItem(int position) {
-        return mItems.get(position);
+        return mItemsFiltered.get(position);
     }
 
     @Override
@@ -97,12 +104,14 @@ public class MatchesListAdapter extends ArrayAdapter<IListViewType>  {
     public void setmItems(List<IListViewType> mItems) {
         this.mItems.clear();
         this.mItems.addAll(mItems);
+        this.mItemsFiltered.clear();
+        this.mItemsFiltered.addAll(mItems);
         notifyDataSetChanged();
     }
 
     public String getMatchLeagueName(int position){
-        int leagueId = mItems.get(position).getLeagueId();
-        for(IListViewType item : mItems){
+        int leagueId = mItemsFiltered.get(position).getLeagueId();
+        for(IListViewType item : mItemsFiltered){
             if(item.getViewType() == IListViewType.SECTION
                     && item.getLeagueId() == leagueId){
                 Soccerseason season = (Soccerseason)item;
@@ -112,4 +121,48 @@ public class MatchesListAdapter extends ArrayAdapter<IListViewType>  {
 
         return "";
     }
+
+    @Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+    private class ItemFilter extends Filter {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mItemsFiltered.clear();
+            mItemsFiltered.addAll((List<IListViewType>) results.values);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            FilterResults results = new FilterResults();
+            ArrayList<IListViewType> FilteredArrayNames = new ArrayList<>();
+
+            constraint = constraint.toString().toLowerCase();
+            for (IListViewType item : mItems) {
+                if(item.getViewType() == IListViewType.ITEM) {
+                    Match itemMatch = (Match)item;
+                    String homeTeamName = itemMatch.getHomeTeamName();
+                    String awayTeamName = itemMatch.getAwayTeamName();
+                    if (homeTeamName.toLowerCase().startsWith(constraint.toString())) {
+                        FilteredArrayNames.add(itemMatch);
+                    }else {
+                        if (awayTeamName.toLowerCase().startsWith(constraint.toString())) {
+                            FilteredArrayNames.add(itemMatch);
+                        }
+                    }
+                }
+            }
+
+            results.count = FilteredArrayNames.size();
+            results.values = FilteredArrayNames;
+            return results;
+        }
+    }
+
 }
