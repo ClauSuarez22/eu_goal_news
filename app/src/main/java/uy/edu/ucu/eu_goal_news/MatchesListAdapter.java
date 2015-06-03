@@ -141,26 +141,31 @@ public class MatchesListAdapter extends ArrayAdapter<IListViewType> implements F
         protected FilterResults performFiltering(CharSequence constraint) {
 
             FilterResults results = new FilterResults();
-            ArrayList<IListViewType> FilteredArrayNames = new ArrayList<>();
+            ArrayList<IListViewType> filteredArrayNames = new ArrayList<>();
 
             constraint = constraint.toString().toLowerCase();
             for (IListViewType item : mItems) {
+                if(item.getViewType() == IListViewType.SECTION ){
+                    filteredArrayNames.add(item);
+                    continue;
+                }
+
                 if(item.getViewType() == IListViewType.ITEM) {
                     Match itemMatch = (Match)item;
                     String homeTeamName = itemMatch.getHomeTeamName();
                     String awayTeamName = itemMatch.getAwayTeamName();
-                    if (homeTeamName.toLowerCase().startsWith(constraint.toString())) {
-                        FilteredArrayNames.add(itemMatch);
+                     if (homeTeamName.toLowerCase().contains(constraint.toString())) {
+                         filteredArrayNames.add(itemMatch);
                     }else {
-                        if (awayTeamName.toLowerCase().startsWith(constraint.toString())) {
-                            FilteredArrayNames.add(itemMatch);
+                        if (awayTeamName.toLowerCase().contains(constraint.toString())) {
+                            filteredArrayNames.add(itemMatch);
                         }
                     }
                 }
             }
 
-            results.count = FilteredArrayNames.size();
-            results.values = FilteredArrayNames;
+            results.count = filteredArrayNames.size();
+            results.values = filteredArrayNames;
             return results;
         }
     }

@@ -47,7 +47,7 @@ public class LeagueDetailAdapter extends ArrayAdapter<TeamLeague> implements Fil
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.team_league_list_item, parent, false);
 
-        if (mFilteredTeamLeague.size() > 7) {
+        if (mFilteredTeamLeague.size() == mTeamLeague.size()) {
             if (pos < 4) {
                 rowView.setBackgroundColor(Color.parseColor("#E1F5A9"));
             } else if (pos + 3 >= this.mFilteredTeamLeague.size()) {
@@ -113,7 +113,7 @@ public class LeagueDetailAdapter extends ArrayAdapter<TeamLeague> implements Fil
 
             constraint = constraint.toString().toLowerCase();
             for (TeamLeague item : mTeamLeague) {
-                if (item.getTeamName().toLowerCase().startsWith(constraint.toString())) {
+                if (item.getTeamName().toLowerCase().contains(constraint.toString())) {
                     filteredArrayNames.add(item);
                 }
             }
