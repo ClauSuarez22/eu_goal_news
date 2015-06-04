@@ -2,6 +2,7 @@ package uy.edu.ucu.eu_goal_news;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,8 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.larvalabs.svgandroid.SVG;
-import com.larvalabs.svgandroid.SVGParser;
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParser;
 
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -44,11 +45,12 @@ public class GetSVGAsyncTask extends AsyncTask<String, Void, Drawable> {
             connection = (HttpURLConnection) new URL(url + URLEncoder.encode(logoQuery, "UTF-8")).openConnection();
             System.out.println("Cargando logo..");
             System.out.println(url + URLEncoder.encode(logoQuery, "UTF-8"));
-            SVG svgLogo = SVGParser.getSVGFromInputStream(connection.getInputStream());
-            drawable = svgLogo.createPictureDrawable();
+            SVG svgLogo = SVG.getFromInputStream(connection.getInputStream());
+            drawable = new PictureDrawable(svgLogo.renderToPicture());
 
         } catch (Exception e) {
             Log.d(GetSVGAsyncTask.class.getSimpleName(), e.getMessage());
+            drawable = mContext.getResources().getDrawable(R.mipmap.ic_launcher);
             e.printStackTrace();
         }finally {
             if(connection != null) connection.disconnect();
