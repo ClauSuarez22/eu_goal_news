@@ -43,7 +43,7 @@
                 android:padding="5dp"
                 android:textSize="16sp"
                 style="@style/letterStyle"
-                android:text="$321,000,000"
+                android:text="$0"
                 android:textStyle="normal"/>
 
         </LinearLayout>
@@ -123,7 +123,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="1"
+                android:text=""
                 style="@style/letterStyle"
                 android:textStyle="bold"/>
 
@@ -134,7 +134,7 @@
                 android:layout_weight="3"
                 android:gravity="center|left"
                 style="@style/letterStyle"
-                android:text="Juventus" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/playedGames"
@@ -142,7 +142,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="31"
+                android:text="0"
                 style="@style/letterStyle"/>
 
             <TextView
@@ -151,7 +151,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="40"
+                android:text="0"
                 style="@style/letterStyle"/>
 
             <TextView
@@ -160,7 +160,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="40"
+                android:text="0"
                 style="@style/letterStyle"
                 />
 
@@ -170,7 +170,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="40"
+                android:text="0"
                 style="@style/letterStyle"/>
 
             <TextView
@@ -178,7 +178,7 @@
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="73"
+                android:text="0"
                 android:gravity="center"
                 style="@style/letterStyle"
                 android:textStyle="bold"/>

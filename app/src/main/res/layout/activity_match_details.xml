@@ -132,7 +132,7 @@
                 android:gravity="center"
                 android:textSize="18sp"
                 style="@style/letterStyle"
-                android:text="Away Team Name"
+                android:text=""
                 android:textStyle="normal"/>
 
             <TextView
@@ -143,7 +143,7 @@
                 android:textSize="35sp"
                 android:gravity="center"
                 style="@style/letterStyle"
-                android:text="99"
+                android:text=""
                 android:textStyle="bold"/>
 
         </LinearLayout>
@@ -187,7 +187,7 @@
                     android:gravity="center"
                     android:textSize="18sp"
                     style="@style/letterStyle"
-                    android:text="Home Team Name"
+                    android:text=""
                     android:textStyle="normal"/>
 
                 <TextView
@@ -198,7 +198,7 @@
                     android:gravity="center"
                     android:textSize="30sp"
                     style="@style/letterStyle"
-                    android:text="12"
+                    android:text=""
                     android:textStyle="bold"/>
 
                <TextView
@@ -257,24 +257,24 @@
 
                             <TextView
                                 android:id="@+id/h2h_home_team_name"
-                                android:layout_width="@dimen/match_details_h2h_team_name"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
                                 android:gravity="center|left"
                                 android:textSize="14sp"
                                 style="@style/letterStyle"
-                                android:text="Home Team Name"
+                                android:text=""
                                 android:textStyle="normal"/>
 
                             <TextView
                                 android:id="@+id/h2h_home_team_wins"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
+                                android:layout_weight="0.5"
                                 android:gravity="center"
                                 android:textSize="14sp"
                                 style="@style/letterStyle"
-                                android:text="0"
+                                android:text=""
                                 android:textStyle="bold"/>
 
 
@@ -289,13 +289,13 @@
 
                             <TextView
                                 android:id="@+id/h2h_away_team_name"
-                                android:layout_width="@dimen/match_details_h2h_team_name"
+                                android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
+                                android:layout_weight="2"
                                 android:gravity="center|left"
                                 android:textSize="14sp"
                                 style="@style/letterStyle"
-                                android:text="Away Team Name"
+                                android:text=""
                                 android:textStyle="normal"/>
 
 
@@ -303,11 +303,11 @@
                                 android:id="@+id/h2h_away_team_wins"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
+                                android:layout_weight="0.5"
                                 android:gravity="center"
                                 android:textSize="14sp"
                                 style="@style/letterStyle"
-                                android:text="0"
+                                android:text=""
                                 android:textStyle="bold"/>
 
                     </LinearLayout>
@@ -352,7 +352,7 @@
                             android:padding="5dp"
                             android:textSize="16sp"
                             style="@style/letterStyle"
-                            android:text="0"
+                            android:text=""
                             android:textStyle="bold"/>
                     </LinearLayout>
                 </LinearLayout>
